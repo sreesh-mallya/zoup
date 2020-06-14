@@ -1,1 +1,1 @@
-web: gunicorn zoup.src.zoup.wsgi --log-file -
+web: gunicorn zoup.wsgi --log-file -
