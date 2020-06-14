@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://getbootstrap.com/docs/4.1/examples/sign-in/ -->
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Zoup - Sign Up as Staff</title>
+    {% include 'head-common.html' %}
+    <link href="{% static "css/staff-signup.css" %}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+{% include "navbar.html" %}
+
+<form class="form-signin" method="post" action="{% url 'staff-sign-up' %}">
+    {% csrf_token %}
+    <h1 class="h1 logo-xl">Zoup! Delivery</h1>
+
+    <p class="mt-4 mb-4 text-dark">Sign Up to be a part of the <span class="logo-xs">Zoup! Delivery</span> team.</p>
+    {% if messages %}
+    <div class="alert alert-danger" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    {% if not user.is_authenticated %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+    {% endif %}
+
+    <hr>
+    <p class="mt-3 mb-5 text-dark">Already have a <span class="logo-xs">Zoup! Delivery</span> account?
+        <a href="{% url 'sign-in' %}">Log In as Staff</a></p>
+    <p class="mt-5 mb-3 text-muted">&copy; Zoup! 2020. All Rights Reserved.</p>
+</form>
+<script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+</body>
+
+</html>

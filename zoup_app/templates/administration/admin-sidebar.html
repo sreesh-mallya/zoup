@@ -1,0 +1,31 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin-customers' %}">
+                    <span class="icon-people m-auto text-dark"></span> Customers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin-restaurants' %}">
+                    <span class="icon-direction m-auto text-dark"></span> Restaurants
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin-staff' %}">
+                    <span class="icon-people m-auto text-dark"></span> Staff
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin-requests' %}">
+                    <span class="icon-envelope-letter m-auto text-dark"></span> Approval Requests
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                   <span class="icon-globe m-auto text-dark"></span> Events
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

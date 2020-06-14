@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://getbootstrap.com/docs/4.1/examples/sign-in/ -->
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Log In</title>
+    {% include 'head-common.html' %}
+    <link href="{% static "css/staff-signup.css" %}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    {% if success %}
+    <h1 class="h1 text-info">Thank you for partnering with us! <span class="material-icons" style="font-size: 35px;">mood</span></h1>
+    <h2 class="h3 pt-4">Our executive will contact you shortly for collecting related documents and signing the service agreement.</h2>
+    <h2 class="h3 pt-4">We'll notify you when your restaurant will be up and running!</h2>
+    {% endif %}
+    {% if owner_form and restaurant_form %}
+    <h1 class="mt-4 text-dark">Partner with <span class="logo-xs">Zoup!</span></h1>
+    <p class="text-muted mb-5">Sign up to start delivering to your customers and make the most out of your business.</p>
+    <form method="post" action="{% url 'partner-with-zoup' %}">
+        {% csrf_token %}
+        {% if owner_form.errors or restaurant_form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% if owner_form.errors %}
+            {{ owner_form.non_field_errors }}
+            {{ owner_form.name.errors }}
+            {{ owner_form.email.errors }}
+            {{ owner_form.contact.errors }}
+            {% endif %}
+            {% if restaurant_form.errors %}
+            {{ restaurant_form.non_field_errors }}
+            {{ restaurant_form.location.errors }}
+            {{ restaurant_form.cuisine.errors }}
+            {{ restaurant_form.pan_or_gstin.errors }}
+            {{ restaurant_form.license_number.errors }}
+            {{ restaurant_form.fssai.errors }}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <h3 class="text-left mt-3">Owner Details</h3>
+        <p class="text-muted text-left">All fields are required</p>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-4 mb-5">
+                <label for="id_owner-name">Owner Name</label>
+                <input type="text" class="form-control form-control-sm" id="id_owner-name" placeholder="Owner Name" name="owner-name" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_owner-email">Owner Email</label>
+                <input type="email" class="form-control form-control-sm" id="id_owner-email" placeholder="Owner Email" name="owner-email" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_owner-contact">Owner Contact</label>
+                <input type="text" class="form-control form-control-sm" id="id_owner-contact" placeholder="Owner Contact" name="owner-contact" required>
+            </div>
+        </div>
+
+        <h3 class="text-left mt-3">Restaurant Details</h3>
+        <p class="text-muted text-left">All fields are required</p>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-name">Restaurant Name</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-name" placeholder="Restaurant Name" name="restaurant-name" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-location">Restaurant Location</label>
+                <select id="id_restaurant-location" class="form-control form-control-sm" name="restaurant-location" required>
+                    <option value="" selected>---------</option>
+                    <option value="kochi">Kochi</option>
+                    <option value="bengaluru">Bengaluru</option>
+                    <option value="mumbai">Mumbai</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-cuisines">Type of Cuisine</label>
+                <select id="id_restaurant-cuisines" class="form-control form-control-sm" name="restaurant-cuisines" required>
+                    <option value="" selected>---------</option>
+                    <option value="North Indian">North Indian</option>
+                    <option value="South Indian">South Indian</option>
+                    <option value="Indian">Indian</option>
+                    <option value="Tandoor">Tandoor</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Thai">Thai</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Keralite">Keralite</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="American">American</option>
+                    <option value="English">English</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-pan_or_gstin">Restaurant GSTIN/PAN</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-pan_or_gstin" placeholder="GSTIN/PAN" name="restaurant-pan_or_gstin" maxlength="15" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-license_number">Shop License Number</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-license_number" placeholder="Shop License Number" name="restaurant-license_number" maxlength="15" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_restaurant-fssai">FSSAI License Number</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-fssai" placeholder="FSSAI License Number" name="restaurant-fssai" maxlength="14" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="id_restaurant-support_delivery" name="restaurant-support_delivery" checked>
+                <label class="form-check-label" for="id_restaurant-support_delivery">
+                    Support delivery
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary mt-3">Register</button>
+    </form>
+    {% endif %}
+</div>
+<script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+{% extends "partner/partner-base.html" %}
+
+{% block content %}
+<h2 class="pt-5 pb-3 text-dark">All Orders</h2>
+{% if orders %}
+
+{% else %}
+<p>No orders to show.</p>
+{% endif %}
+{% endblock %}

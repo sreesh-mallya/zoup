@@ -1,0 +1,126 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand logo" href="{% url 'home' %}">Zoup!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+                {% if user.is_authenticated and user.account_type == 1 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin-customers' %}">Administration<span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
+
+                {% if not user.is_authenticated or user.account_type == 4 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Events</a>
+                </li>
+                {% endif %}
+
+                {% if user.is_authenticated and user.account_type == 2 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'partner-all-orders' %}">Orders for {{ user.restaurant.name }}, {{ user.restaurant.location.capitalize }}</a>
+                </li>
+                {% endif %}
+
+                {% if user.is_authenticated and user.account_type == 3 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'staff-all-pickups' %}">Your Pickups</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            {% if user.is_authenticated and user.account_type == 4 %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#cartModal" href="#"><span
+                        class="icon-basket m-auto text-white"></span> Cart <span
+                        class="badge badge-primary">5</span></a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a>
+                        <a class="dropdown-item" href="#">Your Orders</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'sign-out' %}">Sign Out</a>
+                    </div>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if user.is_authenticated and user.account_type == 2 %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'sign-out' %}">Sign Out</a>
+                    </div>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if user.is_authenticated and user.account_type == 3 %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#cartModal" href="#">Pickup an Order</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'sign-out' %}">Sign Out</a>
+                    </div>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if user.is_authenticated and user.account_type == 1 %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a>
+                        <a class="dropdown-item" href="{% url 'sign-out' %}">Sign Out</a>
+                    </div>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if not user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item"><a class="nav-link" href="{% url 'customer-sign-up' %}">Sign Up</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'sign-in' %}">Sign In</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>

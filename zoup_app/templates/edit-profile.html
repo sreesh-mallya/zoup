@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://getbootstrap.com/docs/4.1/examples/sign-in/ -->
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Zoup - Customer Sign Up</title>
+    {% include 'head-common.html' %}
+    <link href="{% static "css/edit-profile.css" %}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+{% include 'navbar.html' %}
+
+<form class="form-signin" action="{% url 'edit-profile' %}" method="post">
+    {% csrf_token %}
+    <h3 class="h3 mt-5 mb-5 text-dark">Edit your profile</h3>
+    <p>You can't change your username again. You can change your password
+        <a href="{% url 'change-password' %} ">here</a>.</p>
+    {% if messages %}
+    <div class="alert alert-info" role="alert">
+        {% if messages %}
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    {% if user.account_type == 3 %}
+    <p class="text-muted">You'll only be able to pick up orders from this selected location.</p>
+    {% else %}
+    <p class="text-muted">You'll only be able to order food from restaurants based off off this selected location.</p>
+    {% endif %}
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save Changes</button>
+</form>
+
+<!-- Bootstrap core JavaScript -->
+<script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+
+</body>
+
+</html>

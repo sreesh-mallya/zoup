@@ -1,0 +1,102 @@
+{% extends "administration/admin-base.html" %}
+
+{% block content %}
+<h2 class="mt-5 mb-4 text-dark">Requests pending approval</h2>
+<p class="text-muted">All the delivery staff and partner signups that are pending approval will be shown here.</p>
+{% if messages %}
+<div class="alert alert-info mt-5" role="alert">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+
+<ul class="nav nav-tabs mt-5 mb-5" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="home" aria-selected="true">Staff</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="restaurants-tab" data-toggle="tab" href="#restaurants" role="tab" aria-controls="profile" aria-selected="false">Restaurants</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="staff" role="tabpanel" aria-labelledby="staff-tab">
+        {% if staff %}
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Location</th>
+                    <th>Is Approved?</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for person in staff %}
+                <tr>
+                    <td>{{ person.id }}</td>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.email }}</td>
+                    <td>{{ person.location.capitalize }}</td>
+                    {% if person.is_approved %}
+                    <td><span class="icon-like m-auto text-dark"></span></td>
+                    {% else %}
+                    <td><span class="icon-dislike m-auto text-dark"></span></td>
+                    {% endif %}
+                    <td>
+                        <form method="post" action="{% url 'admin-requests' %}">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ person.id }}" name="approve-staff" />
+                            <input class="btn btn-sm btn-info" type="submit" value="Approve" />
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p>No staff pending approval.</p>
+    </div>
+    <div class="tab-pane fade" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
+        {% if restaurants %}
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Owner Email</th>
+                    <th>Location</th>
+                    <th>License Number</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for restaurant in restaurants %}
+                <tr>
+                    <td>{{ restaurant.id }}</td>
+                    <td>{{ restaurant.name }}</td>
+                    <td>{{ restaurant.owner.email }}</td>
+                    <td>{{ restaurant.location.capitalize }}</td>
+                    <td>{{ restaurant.license_number }}</td>
+                    <td><a href="{% url 'admin-review-restaurant' restaurant_id=restaurant.id %}" role="button" class="btn btn-primary btn-sm">Review</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p>No restaurants pending approval.</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% endif %}
+{% endblock %}

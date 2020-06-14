@@ -1,0 +1,12 @@
+{% extends "staff/staff-base.html" %}
+
+{% block content %}
+<h2 class="pt-5 pb-3 text-dark">All Pickups</h2>
+{% if orders %}
+
+<div class="alert alert-info pb-5 pt-5" role="alert">You don't have a pickup currently.</div>
+
+{% else %}
+<p>No pickups to show.</p>
+{% endif %}
+{% endblock %}

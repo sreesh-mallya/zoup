@@ -1,0 +1,24 @@
+[
+  {
+    "model": "zoup_app.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$pqDSVqA7hEoB$GhAHUD7dvZONvqoJuESCmpILhhAFUklUcRpiezWmako=",
+      "last_login": "2020-06-14T12:07:08.451Z",
+      "is_superuser": false,
+      "username": "admin",
+      "date_joined": "2020-06-13",
+      "account_type": 1,
+      "contact": "8893199981",
+      "name": "Administrator",
+      "email": "admin@zoup.com",
+      "location": "kochi",
+      "is_staff": false,
+      "is_active": true,
+      "is_approved": false,
+      "is_available": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

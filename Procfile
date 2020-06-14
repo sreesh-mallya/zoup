@@ -1,0 +1,1 @@
+web: gunicorn zoup.src.zoup.wsgi --log-file -
