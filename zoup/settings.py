@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'g1onp1%knxzj-fvs3&eh@*9+*=oh7e&r-o70r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['zoup-dev.herokuapp.com/', ]
+ALLOWED_HOSTS = ['zoup-dev.herokuapp.com', ]
 
 # Application definition
 
