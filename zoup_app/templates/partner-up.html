@@ -21,8 +21,8 @@
     <h2 class="h3 pt-4">We'll notify you when your restaurant will be up and running!</h2>
     {% endif %}
     {% if owner_form and restaurant_form %}
-    <h1 class="mt-4 text-dark">Partner with <span class="logo-xs">Zoup!</span></h1>
-    <p class="text-muted mb-5">Sign up to start delivering to your customers and make the most out of your business.</p>
+    <h1 class="pt-lg-5 text-dark" style="padding-top: 80px;">Partner with <span class="logo-xs">Zoup!</span></h1>
+    <p class="text-muted pb-5">Sign up to start delivering to your customers and make the most out of your business.</p>
     <form method="post" action="{% url 'partner-with-zoup' %}">
         {% csrf_token %}
         {% if owner_form.errors or restaurant_form.errors %}
@@ -38,17 +38,17 @@
             {{ restaurant_form.location.errors }}
             {{ restaurant_form.cuisine.errors }}
             {{ restaurant_form.pan_or_gstin.errors }}
-            {{ restaurant_form.license_number.errors }}
+            {{ restaurant_form.license_nupber.errors }}
             {{ restaurant_form.fssai.errors }}
             {% endif %}
         </div>
         {% endif %}
 
-        <h3 class="text-left mt-3">Owner Details</h3>
+        <h3 class="text-left pt-3">Owner Details</h3>
         <p class="text-muted text-left">All fields are required</p>
         <hr>
         <div class="form-row">
-            <div class="form-group col-md-4 mb-5">
+            <div class="form-group col-md-4 pb-5">
                 <label for="id_owner-name">Owner Name</label>
                 <input type="text" class="form-control form-control-sm" id="id_owner-name" placeholder="Owner Name" name="owner-name" required>
             </div>
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <h3 class="text-left mt-3">Restaurant Details</h3>
+        <h3 class="text-left pt-3">Restaurant Details</h3>
         <p class="text-muted text-left">All fields are required</p>
         <hr>
         <div class="form-row">
@@ -76,7 +76,7 @@
                     <option value="" selected>---------</option>
                     <option value="kochi">Kochi</option>
                     <option value="bengaluru">Bengaluru</option>
-                    <option value="mumbai">Mumbai</option>
+                    <option value="mupbai">Mupbai</option>
                 </select>
             </div>
             <div class="form-group col-md-4">
@@ -108,12 +108,12 @@
                 <input type="text" class="form-control form-control-sm" id="id_restaurant-pan_or_gstin" placeholder="GSTIN/PAN" name="restaurant-pan_or_gstin" maxlength="15" required>
             </div>
             <div class="form-group col-md-4">
-                <label for="id_restaurant-license_number">Shop License Number</label>
-                <input type="text" class="form-control form-control-sm" id="id_restaurant-license_number" placeholder="Shop License Number" name="restaurant-license_number" maxlength="15" required>
+                <label for="id_restaurant-license_nupber">Shop License Nupber</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-license_nupber" placeholder="Shop License Nupber" name="restaurant-license_nupber" maxlength="15" required>
             </div>
             <div class="form-group col-md-4">
-                <label for="id_restaurant-fssai">FSSAI License Number</label>
-                <input type="text" class="form-control form-control-sm" id="id_restaurant-fssai" placeholder="FSSAI License Number" name="restaurant-fssai" maxlength="14" required>
+                <label for="id_restaurant-fssai">FSSAI License Nupber</label>
+                <input type="text" class="form-control form-control-sm" id="id_restaurant-fssai" placeholder="FSSAI License Nupber" name="restaurant-fssai" maxlength="14" required>
             </div>
         </div>
         <div class="form-group">
@@ -124,7 +124,7 @@
                 </label>
             </div>
         </div>
-        <button type="submit" class="btn btn-lg btn-primary mt-3">Register</button>
+        <button type="submit" class="btn btn-lg btn-primary pt-3">Register</button>
     </form>
     {% endif %}
 </div>

@@ -15,13 +15,13 @@ class Restaurant(models.Model):
     location = models.CharField(max_length=50, choices=LOCATIONS)
     is_serving = models.BooleanField(default=False)
     slug = models.SlugField(blank=True, null=True)
-    cuisines = models.CharField(max_length=50, choices=CUISINES)
+    cuisine = models.CharField(max_length=50, choices=CUISINES, null=True)
     is_approved = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     support_delivery = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return '{}, {}'.format(self.name, self.location)
 
 
 class Owner(models.Model):
@@ -66,3 +66,23 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    item_count = models.PositiveIntegerField(default=0)
+    total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}'s cart - {} item(s) - Total: {}".format(self.user.username, self.item_count, self.total)
+
+
+class CartItem(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE, null=True)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return "{} - {}".format(self.item, self.quantity)
