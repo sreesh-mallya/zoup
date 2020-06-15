@@ -218,3 +218,5 @@ cython_debug/
 
 # Database
 *.sqlite3
+
+zoup/settings/local.py
