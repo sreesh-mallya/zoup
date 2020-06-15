@@ -16,7 +16,7 @@
     <a class="nav-link active" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="true">Staff</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="restaurants-tab" data-toggle="tab" href="#restaurants" role="tab" aria-controls="restaurant" aria-selected="false">Restaurants</a>
+    <a class="nav-link" id="restaurants-tab" data-toggle="tab" href="#restaurants" role="tab" aria-controls="restaurants" aria-selected="false">Restaurants</a>
   </li>
 </ul>
 
@@ -62,6 +62,7 @@
         {% else %}
         <p>No staff pending approval.</p>
     </div>
+
     <div class="tab-pane fade" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
         {% if restaurants %}
         <div class="table-responsive">
