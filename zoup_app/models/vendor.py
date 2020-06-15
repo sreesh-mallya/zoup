@@ -39,7 +39,7 @@ class Item(models.Model):
     price = models.IntegerField(blank=False)
     slug = models.SlugField(blank=True)
     image = models.URLField(blank=True, null=True)
-    description = models.CharField(max_length=100, blank=False)
+    description = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=50, choices=ITEM_TYPES)
 
     def __str__(self):
