@@ -5,6 +5,13 @@ from zoup_app.forms.vendor import OwnerForm, RestaurantForm
 
 
 def partner_with_zoup(request):
+    """
+    Used to create a restaurant partner request. This gets both the owner and restaurant form data from request.POST
+    and creates the model instances after validating them. Saves the restaurant first, so that the restaurant's primary
+    key can be used to map it to an owner.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         owner_form = OwnerForm(request.POST, prefix="owner")
         restaurant_form = RestaurantForm(request.POST, prefix="restaurant")

@@ -22,19 +22,19 @@
     <p class="mt-4 mb-4 text-dark">Sign Up to order food and view your past orders.</p>
 
     {% if messages %}
-    <div class="alert alert-danger" role="alert">
-        {% if messages %}
-        {% for message in messages %}
-        {{ message }}
-        {% endfor %}
-        {% endif %}
-    </div>
+        <div class="alert alert-danger" role="alert">
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        </div>
     {% endif %}
 
     {{ form.as_p }}
 
     {% if not user.is_authenticated %}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
     {% endif %}
 
     <hr>

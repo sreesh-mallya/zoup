@@ -2,80 +2,83 @@
 
 {% block content %}
 
-{% if restaurant.is_approved %}
-<h2 class="mt-5 mb-4 text-dark">Request approved for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
-<p class="text-muted">This restaurant is active under user {{ restaurant.user.username }}.</p>
-<div class="pt-2 pb-4">
-    <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
-</div>
-{% else %}
-<h2 class="mt-5 mb-4 text-dark">Request pending approval for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
-<p class="text-muted">This restaurant will be inactive and hidden until it is approved.
-    <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
-</p>
-{% endif %}
-{% if messages %}
-<div class="alert alert-info" role="alert">
-    {% for message in messages %}
-    {{ message }}
-    {% endfor %}
-</div>
-{% endif %}
+    {% if restaurant.is_approved %}
+        <h2 class="mt-5 mb-4 text-dark">Request approved
+            for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
+        <p class="text-muted">This restaurant is active under user {{ restaurant.user.username }}.</p>
+        <div class="pt-2 pb-4">
+            <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
+        </div>
+    {% else %}
+        <h2 class="mt-5 mb-4 text-dark">Request pending approval
+            for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
+        <p class="text-muted">This restaurant will be inactive and hidden until it is approved.
+            <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
+        </p>
+    {% endif %}
+    {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
-<h4>Owner Details</h4>
-<hr>
-<ul>
-    <li>Owner Name: {{ owner.name }}</li>
-    <li>Owner Email: {{ owner.email }}</li>
-    <li>Owner Contact: {{ owner.contact }}</li>
-</ul>
+    <h4>Owner Details</h4>
+    <hr>
+    <ul>
+        <li>Owner Name: {{ owner.name }}</li>
+        <li>Owner Email: {{ owner.email }}</li>
+        <li>Owner Contact: {{ owner.contact }}</li>
+    </ul>
 
-<h4>Restaurant Details</h4>
-<hr>
-<ul>
-    <li>Restaurant Name: {{ restaurant.name }}</li>
-    <li>Restaurant Location: {{ restaurant.location.capitalize }}</li>
-    <li>Shop License Number: {{ restaurant.license_number }}</li>
-    <li>PAN/GSTIN: {{ restaurant.pan_or_gstin }}</li>
-    <li>FSSAI License Number: {{ restaurant.fssai }}</li>
-    <li>Cuisine: {{ restaurant.cuisines }}</li>
-    <li>Supports Delivery: {{ restaurant.support_delivery }}</li>
-</ul>
+    <h4>Restaurant Details</h4>
+    <hr>
+    <ul>
+        <li>Restaurant Name: {{ restaurant.name }}</li>
+        <li>Restaurant Location: {{ restaurant.location.capitalize }}</li>
+        <li>Shop License Number: {{ restaurant.license_number }}</li>
+        <li>PAN/GSTIN: {{ restaurant.pan_or_gstin }}</li>
+        <li>FSSAI License Number: {{ restaurant.fssai }}</li>
+        <li>Cuisine: {{ restaurant.cuisines }}</li>
+        <li>Supports Delivery: {{ restaurant.support_delivery }}</li>
+    </ul>
 
-{% if restaurant.is_approved %}
-<div class="alert alert-info mt-5" role="alert">This restaurant has been approved.</div>
-{% else %}
-<form action="#" method="post" class="mt-5">
-    {% csrf_token %}
-    <input type="hidden" value="{{ restaurant.id }}" name="approve-restaurant" />
-    <input class="btn btn-lg btn-info" type="submit" value="Approve this request" />
-</form>
-{% endif %}
+    {% if restaurant.is_approved %}
+        <div class="alert alert-info mt-5" role="alert">This restaurant has been approved.</div>
+    {% else %}
+        <form action="#" method="post" class="mt-5">
+            {% csrf_token %}
+            <input type="hidden" value="{{ restaurant.id }}" name="approve-restaurant"/>
+            <input class="btn btn-lg btn-info" type="submit" value="Approve this request"/>
+        </form>
+    {% endif %}
 
-{% if success %}
-<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="successModalLabel">Approved!</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <p>Use the following restaurant user credentials to sign in.</p>
-          <strong>
-              Username: {{ username }}
-              <br>
-              Password: {{ password }}
-          </strong>
-      </div>
-      <div class="modal-footer text-muted">
-        This can only be viewed once so make sure this is copied somewhere.
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
+    {% if success %}
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="successModalLabel">Approved!</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Use the following restaurant user credentials to sign in.</p>
+                        <strong>
+                            Username: {{ username }}
+                            <br>
+                            Password: {{ password }}
+                        </strong>
+                    </div>
+                    <div class="modal-footer text-muted">
+                        This can only be viewed once so make sure this is copied somewhere.
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

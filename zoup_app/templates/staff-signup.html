@@ -20,17 +20,17 @@
 
     <p class="pt-4 pb-4 text-dark">Sign Up to be a part of the <span class="logo-xs">Zoup! Delivery</span> team.</p>
     {% if messages %}
-    <div class="alert alert-danger" role="alert">
-        {% for message in messages %}
-        {{ message }}
-        {% endfor %}
-    </div>
+        <div class="alert alert-danger" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
     {% endif %}
 
     {{ form.as_p }}
 
     {% if not user.is_authenticated %}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
     {% endif %}
 
     <hr>
