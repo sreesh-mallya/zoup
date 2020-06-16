@@ -14,7 +14,7 @@ def index(request):
 
 def customer_signup(request):
     """
-    View to handle customer creation via a form.
+    View to handle customer creation via a form. Create a customer user, and assign the corresponding account_type value.
     :param request:
     :return:
     """
@@ -34,13 +34,15 @@ def customer_signup(request):
             return render(request, 'customer-signup.html', {'form': customer_form})
     else:
         customer_form = UserCreationForm()
+        print(customer_form)
         return render(request, 'customer-signup.html', {'form': customer_form})
 
 
 @login_required(login_url='/accounts/sign-in')
 def edit_user(request):
     """
-    View to handle customer creation via a form.
+    View to handle user edit via a form. Uses django's model form to directly update values, since the instance of
+    request.user, which would correspond to the user who's logged in. Only customers or staff can access this page.
     :param request:
     :return:
     """
@@ -117,6 +119,12 @@ def user_signout(request):
 
 @login_required(login_url='/accounts/sign-in')
 def change_password(request):
+    """
+    View that handles password change. This uses a UserPasswordChangeForm, that inherits from Django's built in
+    PasswordChangeForm to modify form input field attributes.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         form = UserPasswordChangeForm(request.user, request.POST)
         if form.is_valid():

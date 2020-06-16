@@ -14,6 +14,11 @@ from zoup_app.utils import string_generator
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def customer_administration(request):
+    """
+    View to show all customers.
+    :param request:
+    :return:
+    """
     customers = User.objects.filter(account_type=4)
     return render(request, 'administration/admin-customers.html', {'customers': customers})
 
@@ -21,13 +26,23 @@ def customer_administration(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def staff_administration(request):
-    staff = User.objects.filter(account_type=3)
+    """
+    View to show all approved staff.
+    :param request:
+    :return:
+    """
+    staff = User.objects.filter(account_type=3, is_approved=True)
     return render(request, 'administration/admin-staff.html', {'staff': staff})
 
 
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def restaurant_administration(request):
+    """
+    View to show all approved restaurants.
+    :param request:
+    :return:
+    """
     restaurants = Restaurant.objects.filter(is_approved=True)
     return render(request, 'administration/admin-restaurants.html', {'restaurants': restaurants})
 
@@ -35,6 +50,14 @@ def restaurant_administration(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def requests_administration(request):
+    """
+    View to show staff and restaurants that are pending approval. For restaurants, the requests need to be reviewed
+    first from the details page. This view checks for `approve-staff` in request.POST, which would be the name of the
+    hidden input field to approve staff, and the value passed from the hidden field would be used to find the staff
+    and change the status.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         if 'approve-staff' in request.POST:
             staff_id = request.POST['approve-staff']
@@ -57,6 +80,15 @@ def requests_administration(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def review_restaurant(request, restaurant_id):
+    """
+    Approve a restaurant, based on the form hidden input field value, which would be 'approve-restaurant', having the
+    value set to the restaurant's ID. The restaurant's owner is queried using a reverse relationship, and a user is
+    created with the owner's attributes. A randomly generated numeric username is also assigned, along with a password.
+    These credentials will be used by the restaurant owner to sign in and manage orders.
+    :param request:
+    :param restaurant_id:
+    :return:
+    """
     if request.method == 'POST':
         if 'approve-restaurant' in request.POST:
             restaurant_id = request.POST['approve-restaurant']

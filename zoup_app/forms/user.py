@@ -72,11 +72,10 @@ class UserCreationForm(ModelForm):
         else:
             raise forms.ValidationError('Please enter a valid name. Field must not contain any special characters.')
 
-    def clean(self):
-        cleaned_data = super().clean()
-        contact = cleaned_data['contact']
+    def clean_contact(self):
+        contact = self.cleaned_data['contact']
         if len(contact) == 10 and contact.isdigit():
-            return cleaned_data
+            return contact
         else:
             raise forms.ValidationError('Please enter a valid contact number.')
 
@@ -138,11 +137,10 @@ class UserChangeForm(forms.ModelForm):
         else:
             raise forms.ValidationError('Please enter a valid name. Field must not contain any special characters.')
 
-    def clean(self):
-        cleaned_data = super().clean()
-        contact = cleaned_data['contact']
+    def clean_contact(self):
+        contact = self.cleaned_data['contact']
         if len(contact) == 10 and contact.isdigit():
-            return cleaned_data
+            return contact
         else:
             raise forms.ValidationError('Please enter a valid contact number.')
 

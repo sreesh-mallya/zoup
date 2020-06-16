@@ -8,7 +8,7 @@ from zoup_app.forms.user import UserCreationForm
 
 def staff_signup(request):
     """
-    View to handle customer creation via a form.
+    View to handle customer creation via a form. Creates a staff user and sets the corresponding account_type value.
     :param request:
     :return:
     """
