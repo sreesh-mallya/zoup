@@ -21,7 +21,7 @@
                         <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Restaurants</a>
+                        <a class="nav-link" href="{% url 'restaurant-list' %}">Restaurants</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Events</a>
@@ -32,6 +32,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'partner-all-orders' %}">Orders
                             for {{ user.restaurant.name }}, {{ user.restaurant.location.capitalize }}</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if user.restaurant.is_serving %}
+                            <span class="navbar-text text-success"><i class="icon-check m-auto"></i> Serving Now</span>
+                        {% else %}
+                            <span class="navbar-text text-danger"><i class="icon-close m-auto"></i> Not Serving</span>
+                        {% endif %}
                     </li>
                 {% endif %}
 

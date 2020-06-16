@@ -7,13 +7,15 @@
             for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
         <p class="text-muted">This restaurant is active under user {{ restaurant.user.username }}.</p>
         <div class="pt-2 pb-4">
-            <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
+            <a href="{% url 'admin-add-item' restaurant_id=restaurant.id %}" class="btn btn-primary" role="button">Add Items to Menu</a>
+        <a href="{% url 'admin-view-items' restaurant_id=restaurant.id %}" class="btn btn-primary" role="button">View Menu</a>
         </div>
     {% else %}
         <h2 class="mt-5 mb-4 text-dark">Request pending approval
             for {{ restaurant.name }}, {{ restaurant.location.capitalize }}</h2>
         <p class="text-muted">This restaurant will be inactive and hidden until it is approved.
-            <a href="#" class="btn btn-primary" role="button">Add Items to Menu</a>
+            <a href="{% url 'admin-add-item' restaurant_id=restaurant.id %}" class="btn btn-primary" role="button">Add Items to Menu</a>
+            <a href="{% url 'admin-view-items' restaurant_id=restaurant.id %}" class="btn btn-primary" role="button">View Menu</a>
         </p>
     {% endif %}
     {% if messages %}
@@ -40,7 +42,7 @@
         <li>Shop License Number: {{ restaurant.license_number }}</li>
         <li>PAN/GSTIN: {{ restaurant.pan_or_gstin }}</li>
         <li>FSSAI License Number: {{ restaurant.fssai }}</li>
-        <li>Cuisine: {{ restaurant.cuisines }}</li>
+        <li>Cuisine: {{ restaurant.cuisine }}</li>
         <li>Supports Delivery: {{ restaurant.support_delivery }}</li>
     </ul>
 

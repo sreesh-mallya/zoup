@@ -15,8 +15,9 @@
 
 <div class="container">
     {% if success %}
-        <h1 class="h1 text-info">Thank you for partnering with us! <span class="material-icons"
-                                                                         style="font-size: 35px;">mood</span></h1>
+        <h1 class="h1 text-info" style="padding-top: 150px;">Thank you for partnering with us! <span
+                class="material-icons"
+                style="font-size: 35px;">mood</span></h1>
         <h2 class="h3 pt-4">Our executive will contact you shortly for collecting related documents and signing the
             service agreement.</h2>
         <h2 class="h3 pt-4">We'll notify you when your restaurant will be up and running!</h2>
@@ -110,8 +111,8 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="id_restaurant-cuisine">Type of Cuisine</label>
-                    <select id="id_restaurant-cuisine" class="form-control form-control-sm" name="restaurant-cuisine"
-                            required>
+                    <select name="restaurant-cuisine" class="form-control form-control-sm" required
+                            id="id_restaurant-cuisine">
                         <option value="" selected>---------</option>
                         <option value="North Indian">North Indian</option>
                         <option value="South Indian">South Indian</option>
@@ -124,10 +125,10 @@
                         <option value="Karnataka">Karnataka</option>
                         <option value="Hyderabad">Hyderabad</option>
                         <option value="Italian">Italian</option>
-                        <option value="Punjabi">Punjabi</option>
                         <option value="American">American</option>
                         <option value="English">English</option>
                         <option value="Other">Other</option>
+
                     </select>
                     {% if restaurant_form.cuisine.errors %}
                         {% for error in restaurant_form.cuisine.errors %}

@@ -34,6 +34,13 @@ class Owner(models.Model):
         return '{} : {}'.format(self.name, self.restaurant.name)
 
 
+class Menu(models.Model):
+    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, primary_key=True)
+
+    def __str__(self):
+        return 'Menu for {}'.format(self.restaurant.name)
+
+
 class Item(models.Model):
     name = models.CharField(max_length=100, blank=False)
     price = models.IntegerField(blank=False)
@@ -41,17 +48,10 @@ class Item(models.Model):
     image = models.URLField(blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=50, choices=ITEM_TYPES)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
-
-
-class Menu(models.Model):
-    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, primary_key=True)
-    items = models.ManyToManyField(Item)
-
-    def __str__(self):
-        return 'Menu for {}'.format(self.restaurant.name)
 
 
 class Event(models.Model):
@@ -74,6 +74,7 @@ class Cart(models.Model):
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "{}'s cart - {} item(s) - Total: {}".format(self.user.username, self.item_count, self.total)

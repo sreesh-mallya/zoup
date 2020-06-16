@@ -2,8 +2,8 @@ from django import forms
 from django.forms import ModelForm
 
 from zoup_app.models import Restaurant
-from zoup_app.models.vendor import Owner
-from zoup_app.utils import slugify_fields
+from zoup_app.models.vendor import Owner, Item
+from zoup_app.utils import slugify_fields, slugify_field
 
 
 class RestaurantForm(ModelForm):
@@ -13,6 +13,7 @@ class RestaurantForm(ModelForm):
 
     def save(self, commit=True):
         restaurant = super().save(commit=False)
+        print(restaurant.cuisine)
         restaurant.slug = slugify_fields(restaurant, 'name', 'location')
 
         if commit:
@@ -39,3 +40,20 @@ class OwnerForm(ModelForm):
             return contact
         else:
             raise forms.ValidationError('Please enter a valid contact number.')
+
+
+class ItemForm(ModelForm):
+    description = forms.CharField(widget=forms.Textarea())
+
+    class Meta:
+        model = Item
+        exclude = ('slug', 'image', 'menu')
+
+    def save(self, commit=True):
+        item = super().save()
+        item.slug = slugify_field(item, 'name')
+
+        if commit:
+            item.save()
+
+        return item

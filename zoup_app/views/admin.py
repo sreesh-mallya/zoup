@@ -3,11 +3,12 @@ import time
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES
+from zoup_app.forms.vendor import ItemForm
 from zoup_app.models import User, Restaurant
-from zoup_app.models.vendor import Owner
+from zoup_app.models.vendor import Owner, Menu
 from zoup_app.utils import string_generator
 
 
@@ -96,6 +97,8 @@ def review_restaurant(request, restaurant_id):
             restaurant.is_approved = True
 
             owner = restaurant.owner
+
+            # Generate username and password from custom string generator utility function
             username = string_generator(size=4, chars=string.digits) + str(int(round(time.time() % 10000)))
             password = string_generator(size=5) + str(int(round(time.time() % 100000)))
 
@@ -126,3 +129,49 @@ def review_restaurant(request, restaurant_id):
         owner = Owner.objects.get(restaurant=restaurant)
         return render(request, 'administration/admin-restaurant-details.html',
                       {'restaurant': restaurant, 'owner': owner})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 1)
+def add_item_to_menu(request, restaurant_id):
+    """
+    This view is used to add an item to a restaurant's menu. Uses a Item model form to get Item details and validate
+    them. If a restaurant doesn't have a menu object (reverse access to the restaurant OneToOneField), a menu is created
+    and the restaurant field is set to the restaurant being accessed based on the `restaurant_id` path parameter.
+    :param request:
+    :param restaurant_id: ID of the restaurant to whose menu needs an item added
+    :return:
+    """
+    if request.method == 'POST':
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+        item_form = ItemForm(request.POST)
+        print(item_form.as_p())
+
+        # Get the restaurant's menu, or create one if it doesn't exist
+        try:
+            menu = restaurant.menu
+        except Menu.DoesNotExist:
+            menu = Menu(restaurant=restaurant)
+            menu.save()
+
+        if item_form.is_valid():
+            item = item_form.save(commit=False)
+            item.menu = menu  # Add item to the restaurant's menu
+            item.save()
+            messages.success(request, "Item {} added to {}'s menu.".format(item.name, restaurant.name))
+
+        return redirect('admin-add-item', restaurant_id=restaurant_id)
+
+    else:
+        restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+        item_form = ItemForm()
+
+        return render(request, 'administration/restaurant-add-item.html', {'form': item_form, 'restaurant': restaurant})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 1)
+def view_restaurant_items(request, restaurant_id):
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    items = restaurant.menu.item_set.all()
+    return render(request, 'administration/restaurant-view-items.html', {'items': items, 'restaurant': restaurant})

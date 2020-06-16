@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
+from zoup_app.models import Restaurant, Item
+from zoup_app.models.vendor import Cart, CartItem
 
 
 def index(request):
@@ -80,7 +82,7 @@ def user_signin(request):
                 if user.account_type == 1:
                     return redirect('admin-customers')
                 elif user.account_type == 2:
-                    return redirect('admin-customers')
+                    return redirect('partner-all-orders')
                 elif user.account_type == 3:
                     return redirect('staff-all-pickups')
                 elif user.account_type == 4:
@@ -139,3 +141,35 @@ def change_password(request):
         form = UserPasswordChangeForm(request.user)
 
     return render(request, 'change-password.html', {'form': form})
+
+
+def restaurant_list(request):
+    restaurants = Restaurant.objects.filter(is_approved=True)
+    return render(request, 'restaurant-list.html', {'restaurants': restaurants})
+
+
+def restaurant_menu(request, restaurant_slug):
+    if request.method == 'POST' and request.user.is_authenticated:
+        restaurant = get_object_or_404(Restaurant, slug=restaurant_slug)
+        if 'item-id' in request.POST and 'item-quantity' in request.POST:
+            item_id = request.POST['item-id']
+            item_quantity = request.POST['item-quantity']
+            item = Item.objects.get(id=item_id)
+            try:
+                cart = request.user.cart
+            except Cart.DoesNotExist:
+                cart = Cart(user=request.user, restaurant=restaurant)
+                cart.save()
+            cart_item = CartItem(cart=cart, item=item, quantity=item_quantity)
+            cart_item.save()
+
+    else:
+        restaurant = get_object_or_404(Restaurant, slug=restaurant_slug)
+        items = restaurant.menu.item_set.all()
+        return render(request, 'restaurant-menu.html', {'restaurant': restaurant, 'items': items})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == ACCOUNT_TYPES['CUSTOMER'])
+def view_cart(request):
+    pass

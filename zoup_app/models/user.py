@@ -71,7 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     name = models.CharField(max_length=100, blank=False)
 
-    email = models.EmailField(unique=True, null=False, error_messages={
+    email = models.EmailField(unique=False, null=False, error_messages={
         'unique': _("A user with that email already exists."),
     })
 
