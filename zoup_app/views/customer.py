@@ -7,18 +7,19 @@ from django.shortcuts import render, redirect, get_object_or_404
 from zoup_app.constants import ACCOUNT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
 from zoup_app.models import Restaurant, Item
-from zoup_app.models.vendor import Cart, CartItem
+from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem
 
 
+@user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def index(request):
-    return render(request, 'index.html', {})
+    return render(request, 'index.html')
 
 
 def customer_signup(request):
     """
-    View to handle customer creation via a form. Create a customer user, and assign the corresponding account_type value.
-    :param request:
-    :return:
+    View to handle customer creation via a form. Create a customer user, and assign the
+    corresponding account_type value.
+    :param request: :return:
     """
     if request.user.is_authenticated:
         messages.info(request, 'Please sign out to register.')
@@ -51,7 +52,7 @@ def edit_user(request):
     if request.method == 'POST':
         edit_user_form = UserChangeForm(request.POST, instance=request.user)
         if edit_user_form.is_valid():
-            user = edit_user_form.save()
+            edit_user_form.save()
             messages.success(request, 'Your changes have been saved.')
             return redirect('edit-profile')
         else:
@@ -144,24 +145,62 @@ def change_password(request):
 
 
 def restaurant_list(request):
-    restaurants = Restaurant.objects.filter(is_approved=True)
+    if request.user.is_authenticated:
+        restaurants = Restaurant.objects.filter(is_approved=True, location=request.user.location)
+    else:
+        restaurants = Restaurant.objects.filter(is_approved=True)
+
     return render(request, 'restaurant-list.html', {'restaurants': restaurants})
 
 
 def restaurant_menu(request, restaurant_slug):
-    if request.method == 'POST' and request.user.is_authenticated:
+    if request.method == 'POST' and request.user.is_authenticated and \
+            request.user.account_type == ACCOUNT_TYPES['CUSTOMER']:
+
         restaurant = get_object_or_404(Restaurant, slug=restaurant_slug)
+
         if 'item-id' in request.POST and 'item-quantity' in request.POST:
             item_id = request.POST['item-id']
-            item_quantity = request.POST['item-quantity']
+            item_quantity = int(request.POST['item-quantity'])
+
+            if item_quantity <= 0:
+                messages.error(request, "Item quantity should be greater than 0.")
+                return redirect('restaurant-menu', restaurant_slug=restaurant_slug)
+
             item = Item.objects.get(id=item_id)
+
+            # Check if a cart object has been created for request.user, if not create and object
+            # with user amd restaurant since we know both the values and save
             try:
                 cart = request.user.cart
             except Cart.DoesNotExist:
                 cart = Cart(user=request.user, restaurant=restaurant)
                 cart.save()
+
+            # Reset cart if adding item from another restaurant
+            if cart.restaurant != restaurant or cart.restaurant is None:
+                if cart.restaurant is not None:
+                    messages.info(request,
+                                  'Removing items from {} to add items from {}.'.format(
+                                      cart.restaurant.name, restaurant.name))
+                cart.restaurant = restaurant
+                cart.total = 0
+                cart.item_count = 0
+                cart.cartitem_set.all().delete()
+
             cart_item = CartItem(cart=cart, item=item, quantity=item_quantity)
             cart_item.save()
+            cart.total += item.price * item_quantity
+            cart.item_count = cart.cartitem_set.all().count()
+            print(cart)
+            cart.save()
+
+            messages.success(request, '{} x {} added to your cart.'.format(item_quantity, item.name.capitalize()))
+
+        else:
+            messages.error(request, "Oops! Something's wrong. Try again!")
+
+        return redirect('restaurant-menu', restaurant_slug=restaurant_slug)
 
     else:
         restaurant = get_object_or_404(Restaurant, slug=restaurant_slug)
@@ -170,6 +209,63 @@ def restaurant_menu(request, restaurant_slug):
 
 
 @login_required(login_url='/accounts/sign-in')
-@user_passes_test(lambda u: u.account_type == ACCOUNT_TYPES['CUSTOMER'])
+@user_passes_test(lambda u: u.is_authenticated and u.account_type == ACCOUNT_TYPES['CUSTOMER'])
 def view_cart(request):
-    pass
+    if request.method == 'POST':
+        # POST request for clearing cart: reset cart attribute values
+        if 'clear-cart' in request.POST:
+            cart = request.user.cart
+            cart.restaurant = None
+            cart.total = 0
+            cart.item_count = 0
+            cart.cartitem_set.all().delete()
+            cart.save()
+            messages.success(request, 'Cart cleared.')
+
+        # Place order based on user's cart
+        elif 'place-order' in request.POST:
+            cart = request.user.cart
+
+            # Place order
+            order = Order(customer=request.user, item_count=cart.item_count, total=cart.total,
+                          restaurant=cart.restaurant)
+
+            print(order)
+            order.save()
+
+            items = cart.cartitem_set.all()
+
+            # Assign cart items to order items
+            for i, cart_item in enumerate(items):
+                order_item = OrderItem(item=cart_item.item, order=order, quantity=cart_item.quantity)
+                order_item.save()
+
+            # Clear current user's cart
+            cart = request.user.cart
+            cart.restaurant = None
+            cart.total = 0
+            cart.item_count = 0
+            cart.cartitem_set.all().delete()
+            cart.save()
+
+            messages.success(request, 'Order has been placed.')
+        else:
+            messages.error("Oops! Something's wrong. Try again!")
+        return redirect('view-cart')
+    else:
+        try:
+            cart = request.user.cart
+        except Cart.DoesNotExist:
+            cart = Cart(user=request.user)
+            cart.save()
+
+        items = cart.cartitem_set.all()
+
+        return render(request, 'cart.html', {'items': items, 'restaurant': cart.restaurant})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.is_authenticated and u.account_type == ACCOUNT_TYPES['CUSTOMER'])
+def view_orders(request):
+    orders = Order.objects.filter(customer=request.user)
+    return render(request, 'customer-orders.html', {'orders': orders})

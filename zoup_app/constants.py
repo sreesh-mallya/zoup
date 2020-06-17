@@ -35,3 +35,13 @@ ACCOUNT_TYPES = {
     'STAFF': 3,
     'CUSTOMER': 4
 }
+
+ORDER_STATUS_CHOICES = (
+    ('placed', 'Placed'),
+    ('accepted', 'Accepted'),
+    ('preparing', 'Preparing'),
+    ('prepared', 'Prepared'),
+    ('picked-up', 'Picked Up'),
+    ('delivered', 'Delivered'),
+    ('cancelled', 'Cancelled'),
+)

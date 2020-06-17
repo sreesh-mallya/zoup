@@ -51,9 +51,9 @@
 
             {% if user.is_authenticated and user.account_type == 4 %}
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#cartModal" href="#"><span
+                    <li class="nav-item"><a class="nav-link" href="{% url 'view-cart' %}"><span
                             class="icon-basket m-auto text-white"></span> Cart <span
-                            class="badge badge-primary">5</span></a></li>
+                            class="badge badge-primary">{{ cart_item_count }}</span></a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown"
@@ -63,7 +63,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit Profile</a>
                             <a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a>
-                            <a class="dropdown-item" href="#">Your Orders</a>
+                            <a class="dropdown-item" href="{% url 'view-orders' %}">Your Orders</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'sign-out' %}">Sign Out</a>
                         </div>

@@ -1,20 +1,22 @@
 from django.urls import path
 
-from zoup_app.views import auth, admin, staff, vendor
+from zoup_app.views import customer, admin, staff, vendor
 
 urlpatterns = [
-    path('', auth.index, name='home'),
+    path('', customer.index, name='home'),
     path('partner-with-zoup', vendor.partner_with_zoup, name='partner-with-zoup'),
-    path('restaurants', auth.restaurant_list, name='restaurant-list'),
-    path('restaurants/<str:restaurant_slug>', auth.restaurant_menu, name='restaurant-menu'),
-    path('accounts/customer/sign-up', auth.customer_signup, name='customer-sign-up'),
+    path('restaurants', customer.restaurant_list, name='restaurant-list'),
+    path('restaurants/<str:restaurant_slug>', customer.restaurant_menu, name='restaurant-menu'),
+    path('accounts/customer/sign-up', customer.customer_signup, name='customer-sign-up'),
     path('accounts/staff/sign-up', staff.staff_signup, name='staff-sign-up'),
+    path('cart', customer.view_cart, name='view-cart'),
+    path('orders', customer.view_orders, name='view-orders'),
 
     # Common account related URLs
-    path('accounts/edit-profile', auth.edit_user, name='edit-profile'),
-    path('accounts/change-password', auth.change_password, name='change-password'),
-    path('accounts/sign-in', auth.user_signin, name='sign-in'),
-    path('accounts/sign-out', auth.user_signout, name='sign-out'),
+    path('accounts/edit-profile', customer.edit_user, name='edit-profile'),
+    path('accounts/change-password', customer.change_password, name='change-password'),
+    path('accounts/sign-in', customer.user_signin, name='sign-in'),
+    path('accounts/sign-out', customer.user_signout, name='sign-out'),
 
     # Vendor URLs
     path('orders/all', vendor.all_orders, name='partner-all-orders'),

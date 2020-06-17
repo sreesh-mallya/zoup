@@ -1,6 +1,6 @@
 from django.db import models
 
-from zoup_app.constants import LOCATIONS, CUISINES, ITEM_TYPES
+from zoup_app.constants import LOCATIONS, CUISINES, ITEM_TYPES, ORDER_STATUS_CHOICES
 from zoup_app.models import User
 
 
@@ -58,7 +58,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100, blank=False)
     slug = models.SlugField(blank=True)
     banner = models.URLField(blank=True, null=True)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, blank=False)
+    venue = models.CharField(blank=True, max_length=100, null=True)
     description = models.CharField(max_length=1000, blank=False)
     from_date = models.DateTimeField(blank=True)
     to_date = models.DateTimeField(blank=True)
@@ -74,15 +74,39 @@ class Cart(models.Model):
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, null=True)
+    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, null=True, default=None, blank=True)
 
     def __str__(self):
         return "{}'s cart - {} item(s) - Total: {}".format(self.user.username, self.item_count, self.total)
 
 
+class Order(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_orders')
+    staff = models.ForeignKey(User, on_delete=models.SET(None), null=True, related_name='staff_orders')
+    item_count = models.PositiveIntegerField(default=0)
+    total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    restaurant = models.OneToOneField(Restaurant, on_delete=models.SET(None), null=True)
+    delivered_on = models.DateTimeField(null=True)
+    status = models.CharField(choices=ORDER_STATUS_CHOICES, default='pending', max_length=20)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.restaurant.name, self.customer.username, self.total)
+
+
 class CartItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
-    cart = models.OneToOneField(Cart, on_delete=models.CASCADE, null=True)
+    cart = models.ForeignKey(Cart, on_delete=models.SET(None), null=True)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return "{} - {}".format(self.item, self.quantity)
+
+
+class OrderItem(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET(None), null=True, default=None)
     quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):

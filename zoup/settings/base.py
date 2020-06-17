@@ -71,7 +71,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -99,3 +99,6 @@ CSRF_COOKIE_SECURE = False
 SECURE_HSTS_SECONDS = None
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_FRAME_DENY = False
+
+# Context processor to show the cart item count in navbar label
+TEMPLATES[0]['OPTIONS']['context_processors'].append('zoup_app.context_processors.cart_item_count_processor')
