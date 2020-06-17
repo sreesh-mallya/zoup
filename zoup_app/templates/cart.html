@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    {% include 'head-common.html' %}
+    <link href="{% static "css/landing-page.css" %}" rel="stylesheet">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    {% if items %}
+        <h5 class="font-weight-light" style="padding-top: 120px;">You are ordering from</h5>
+        <h1>{{ restaurant.name }} &nbsp;<span class="font-weight-light" style="font-size: 0.8em;"><i
+                class="icon-location-pin m-auto text-primary"></i>{{ restaurant.location.capitalize }}</span></h1>
+        <div class="pt-2 pb-2">
+            <p class="h3 text-info font-weight-bold">Cart total: &#8377; {{ user.cart.total }}</p>
+        </div>
+        <div>
+            <p class="h3 text-dark font-weight-bold">Total item(s) in cart: {{ user.cart.item_count }}</p>
+        </div>
+
+        <hr>
+
+        {% if messages %}
+            <div class="alert alert-info mt-4 mb-4" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        {% for item in items %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <p class="h4 card-title text-center font-weight-bold">{{ item.item.name }}</p>
+                        </div>
+                        <div class="col-lg-4 text-center text-info h5 font-weight-bold">
+                            Price per item: &#8377; {{ item.item.price }}
+                        </div>
+                        <div class="col-lg-4 text-center text-dark h5 font-weight-bold">
+                            <p>Quantity: {{ item.quantity }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="text-right">
+            <form action="{% url 'view-cart' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-secondary btn-lg m-2" name="clear-cart" value="">Clear Cart</button>
+                <button class="btn btn-primary btn-lg m-2" name="place-order" value="">Place Order</button>
+            </form>
+        </div>
+    {% else %}
+        <h1 class="h1 mt-5 font-weight-bold" style="padding-top: 120px;">No items in cart.</h1>
+        {% if messages %}
+            <div class="alert alert-info mt-4 mb-4" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+
+<script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+</body>
+</html>

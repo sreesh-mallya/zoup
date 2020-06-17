@@ -1,0 +1,79 @@
+{% extends "administration/admin-base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="h2 pt-4 pb-3"><strong>{{ restaurant.name }} <span
+                class="font-weight-light">{{ restaurant.location.capitalize }}</span></strong>&nbsp;<span
+                class="text-muted font-weight-light pl-2" style="font-size: 0.8em;">Add Item to Menu</span></h2>
+        <hr>
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p class="text-danger">{{ error|escape }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="post" action="{% url 'admin-add-item' restaurant_id=restaurant.id %}" class="pt-4">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="id_name">Name:</label>
+                    <input type="text" class="form-control" name="name" maxlength="100" required id="id_name"
+                           placeholder="Name">
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <small class="text-danger">{{ error|escape }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="id_price">Price:</label>
+                    <input type="number" class="form-control" name="price" required id="id_price"
+                           placeholder="Price in Rupees">
+                    {% if form.price.errors %}
+                        {% for error in form.price.errors %}
+                            <small class="text-danger">{{ error|escape }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="id_description">Description:</label>
+                    <textarea name="description" cols="40" rows="10" class="form-control" required id="id_description"
+                              placeholder="Description"></textarea>
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <small class="text-danger">{{ error|escape }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="id_type">Type:</label>
+                    <select name="type" required id="id_type" class="form-control">
+                        <option value="" selected>---------</option>
+                        <option value="Appetizer">Appetizer</option>
+                        <option value="Main Course">Main Course</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Beverage">Beverage</option>
+                    </select>
+                    {% if form.type.errors %}
+                        {% for error in form.type.errors %}
+                            <small class="text-danger">{{ error|escape }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-5">Add Item</button>
+        </form>
+    </div>
+{% endblock %}
