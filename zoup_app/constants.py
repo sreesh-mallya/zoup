@@ -37,7 +37,7 @@ ACCOUNT_TYPES = {
 }
 
 ORDER_STATUS_CHOICES = (
-    ('placed', 'Placed'),
+    ('pending', 'Pending'),
     ('accepted', 'Accepted'),
     ('preparing', 'Preparing'),
     ('prepared', 'Prepared'),
@@ -45,3 +45,5 @@ ORDER_STATUS_CHOICES = (
     ('delivered', 'Delivered'),
     ('cancelled', 'Cancelled'),
 )
+
+ORDER_STATUS = ['placed', 'accepted', 'preparing', 'prepared', 'picked-up', 'delivered', 'cancelled']

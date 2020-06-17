@@ -1,12 +1,54 @@
 {% extends "staff/staff-base.html" %}
 
 {% block content %}
-<h2 class="pt-5 pb-3 text-dark">All Pickups</h2>
-{% if orders %}
-
-<div class="alert alert-info pb-5 pt-5" role="alert">You don't have a pickup currently.</div>
-
-{% else %}
-<p>No pickups to show.</p>
-{% endif %}
+    <h2 class="pt-5 pb-3 text-dark">All Pickups</h2>
+    {% if orders %}
+        <p class="mt-4 mb-4 text-muted">Showing active orders from your location to pick up.</p>
+        {% csrf_token %}
+        <div class="table-responsive mt-5">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Ordered On</th>
+                    <th>Item Count</th>
+                    <th>Total</th>
+                    <th>Delivered On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.customer.username }}</td>
+                        <td>{{ order.customer.name }}</td>
+                        <td>{{ order.created_on }}</td>
+                        <td>{{ order.item_count }}</td>
+                        <td>&#8377; {{ order.total }}</td>
+                        {% if order.delivered_on %}
+                            <td>{{ order.delivered_on }}</td>
+                        {% else %}
+                            <td>Not yet delivered</td>
+                        {% endif %}
+                        <td>{{ order.status.capitalize }}</td>
+                        {% if not order.delivered_on %}
+                            <td><a class="btn btn-primary btn-sm" role="button"
+                                   href="{% url 'staff-pickup-details' order_id=order.id %}">Review</a>
+                            </td>
+                        {% else %}
+                            <td>No actions</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </form>
+    {% else %}
+        <p>No pickups to show.</p>
+    {% endif %}
 {% endblock %}

@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
 
+from zoup_app.constants import ORDER_STATUS
 from zoup_app.forms.vendor import OwnerForm, RestaurantForm
+from zoup_app.models.vendor import Order
 
 
 def partner_with_zoup(request):
@@ -39,7 +42,46 @@ def partner_with_zoup(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def all_orders(request):
-    return render(request, 'partner/all-orders.html')
+    restaurant = request.user.restaurant
+    orders = Order.objects.filter(restaurant=restaurant)
+    return render(request, 'partner/all-orders.html', {'orders': orders})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 2)
+def pending_orders(request):
+    restaurant = request.user.restaurant
+    orders = Order.objects.filter(restaurant=restaurant, status='pending')
+    return render(request, 'partner/pending-orders.html', {'orders': orders})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 2)
+def order_history(request):
+    restaurant = request.user.restaurant
+    orders = Order.objects.filter(
+        Q(status='delivered') | Q(status='picked-up') | Q(status='delivered') & Q(restaurant=restaurant))
+    return render(request, 'partner/order-history.html', {'orders': orders})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 2)
+def order_details(request, order_id):
+    if request.method == 'POST':
+        if 'order-status' in request.POST:
+            order_status = request.POST['order-status'].lower()
+            if order_status in ORDER_STATUS:
+                order = Order.objects.get(id=order_id)
+                order.status = order_status
+                order.save()
+                messages.success(request, 'Updated status of order with ID {}.'.format(order_id))
+        else:
+            messages.success(request, "Oops! Something's wrong. Try again!")
+        return redirect('partner-order-details', order_id=order_id)
+    else:
+        order = get_object_or_404(Order, id=order_id)
+        items = order.orderitem_set.all()
+        return render(request, 'partner/order-details.html', {'order': order, 'items': items})
 
 
 @login_required(login_url='/accounts/sign-in')

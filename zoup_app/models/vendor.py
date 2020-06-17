@@ -87,7 +87,7 @@ class Order(models.Model):
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    restaurant = models.OneToOneField(Restaurant, on_delete=models.SET(None), null=True)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.SET(None), null=True)
     delivered_on = models.DateTimeField(null=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, default='pending', max_length=20)
 

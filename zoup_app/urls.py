@@ -19,11 +19,16 @@ urlpatterns = [
     path('accounts/sign-out', customer.user_signout, name='sign-out'),
 
     # Vendor URLs
-    path('orders/all', vendor.all_orders, name='partner-all-orders'),
+    path('partner/orders/all', vendor.all_orders, name='partner-all-orders'),
+    path('partner/orders/pending', vendor.pending_orders, name='partner-pending-orders'),
+    path('partner/orders/history', vendor.order_history, name='partner-order-history'),
+    path('partner/orders/<int:order_id>', vendor.order_details, name='partner-order-details'),
     path('settings', vendor.toggle_serving, name='partner-settings'),
 
     # Staff URLs
-    path('pickups/all', staff.all_pickups, name='staff-all-pickups'),
+    path('staff/pickups/all', staff.all_pickups, name='staff-all-pickups'),
+    path('staff/pickups/history', staff.pickup_history, name='staff-pickup-history'),
+    path('staff/pickups/<int:order_id>', staff.pickup_details, name='staff-pickup-details'),
 
     # Administration URLs
     path('administration/dashboard/customers', admin.customer_administration, name='admin-customers'),

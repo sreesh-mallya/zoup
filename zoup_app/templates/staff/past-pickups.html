@@ -1,16 +1,9 @@
-{% extends "partner/partner-base.html" %}
+{% extends "staff/staff-base.html" %}
 
 {% block content %}
-    <h2 class="pt-5 pb-3 text-dark">All Orders</h2>
-    {% if messages %}
-        <div class="alert alert-info mt-4 mb-4" role="alert">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
-    {% endif %}
+    <h2 class="pt-5 pb-3 text-dark">Pickup History</h2>
     {% if orders %}
-
+        <p class="mt-4 mb-4 text-muted">Showing past delivered orders.</p>
         {% csrf_token %}
         <div class="table-responsive mt-5">
             <table class="table table-striped table-sm">
@@ -42,12 +35,12 @@
                             <td>Not yet delivered</td>
                         {% endif %}
                         <td>{{ order.status.capitalize }}</td>
-                        {% if order.delivered_on or order.status == 'prepared' or order.status == 'picked-up'%}
-                            <td>No actions</td>
-                        {% else %}
+                        {% if not order.delivered_on %}
                             <td><a class="btn btn-primary btn-sm" role="button"
-                                   href="{% url 'partner-order-details' order_id=order.id %}">Review</a>
+                                   href="{% url 'staff-pickup-details' order_id=order.id %}">Review</a>
                             </td>
+                        {% else %}
+                            <td>No actions</td>
                         {% endif %}
                     </tr>
                 {% endfor %}
@@ -56,6 +49,6 @@
         </div>
         </form>
     {% else %}
-        <p>No orders to show.</p>
+        <p>No pickups to show.</p>
     {% endif %}
 {% endblock %}
