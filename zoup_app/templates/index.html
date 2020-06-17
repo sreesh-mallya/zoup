@@ -37,11 +37,11 @@
             </div>
 
             <div class="col-md-10 col-lg-8 col-xl-8 mx-auto">
-                <form>
+                <form method="get" action="{% url 'home' %}">
                     <div class="form-group row">
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
                             <input type="text" class="form-control form-control-lg"
-                                   placeholder="Search for restaurants, food, or events">
+                                   placeholder="Search for restaurants or events" name="q">
                         </div>
                         <div class="col-12 col-md-3">
                             <button type="submit" class="btn btn-block btn-lg btn-primary">Search</button>
@@ -53,139 +53,233 @@
     </div>
 </header>
 
-<!-- Icons Grid -->
-<section class="features-icons bg-dark text-center text-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                    <div class="features-icons-icon d-flex">
-                        <i class="icon-list m-auto text-primary"></i>
+{% if not restaurants and not events and not q %}
+    <!-- Icons Grid -->
+    <section class="features-icons bg-dark text-center text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-list m-auto text-primary"></i>
+                        </div>
+                        <h3>The Best Around You</h3>
+                        <p class="lead mb-0">Find the best menus, restaurants, and events around you. Dine out, or if
+                            you're
+                            feeling
+                            lazy, order food to your doorstep.</p>
                     </div>
-                    <h3>The Best Around You</h3>
-                    <p class="lead mb-0">Find the best menus, restaurants, and events around you. Dine out, or if you're
-                        feeling
-                        lazy, order food to your doorstep.</p>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                    <div class="features-icons-icon d-flex">
-                        <i class="icon-location-pin m-auto text-primary"></i>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-location-pin m-auto text-primary"></i>
+                        </div>
+                        <h3>Home Delivery</h3>
+                        <p class="lead mb-0">Get your favourite food from your favourite restaurants delivered to your
+                            doorstep,
+                            with no restrictions on order value and fast delivery.</p>
                     </div>
-                    <h3>Home Delivery</h3>
-                    <p class="lead mb-0">Get your favourite food from your favourite restaurants delivered to your
-                        doorstep,
-                        with no restrictions on order value and fast delivery.</p>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-0 mb-lg-3">
-                    <div class="features-icons-icon d-flex">
-                        <i class="icon-check m-auto text-primary"></i>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-check m-auto text-primary"></i>
+                        </div>
+                        <h3>Earn More</h3>
+                        <p class="lead mb-0">Partner with us to get a better customer reach and earn more opting in for
+                            deliveries, or become a part of the delivery team.</p>
                     </div>
-                    <h3>Earn More</h3>
-                    <p class="lead mb-0">Partner with us to get a better customer reach and earn more opting in for
-                        deliveries, or become a part of the delivery team.</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Image Showcases -->
-<section class="showcase">
-    <div class="container-fluid p-0">
-        <div class="row no-gutters">
+    <!-- Image Showcases -->
+    <section class="showcase">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
 
-            <div class="col-lg-6 order-lg-2 text-white showcase-img"
-                 style="background-image: url({% static 'img/bg-showcase-1.jpg' %});"></div>
-            <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                <h2>Discover the best restaurants</h2>
-                <p class="lead mb-0">Find the best restaurants and their menus, along with their available offers and
-                    upcoming events.</p>
+                <div class="col-lg-6 order-lg-2 text-white showcase-img"
+                     style="background-image: url({% static 'img/bg-showcase-1.jpg' %});"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2>Discover the best restaurants</h2>
+                    <p class="lead mb-0">Find the best restaurants and their menus, along with their available offers
+                        and
+                        upcoming events.</p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 text-white showcase-img"
+                     style="background-image: url({% static 'img/bg-showcase-2.jpg' %});"></div>
+                <div class="col-lg-6 my-auto showcase-text">
+                    <h2>Superfast delivery</h2>
+                    <p class="lead mb-0">If you're feeling lazy to dine out, order food to your doorstep. Pay with
+                        Cash-on-Delivery or Debit/Credit cards.</p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img"
+                     style="background-image: url({% static 'img/bg-showcase-3.jpg' %});"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2>Ride or partner with us</h2>
+                    <p class="lead mb-0">Earn by signing up as a staff and become a part of our delivery team, or if
+                        you've
+                        your own establishment, partner with us.</p>
+                </div>
             </div>
         </div>
-        <div class="row no-gutters">
-            <div class="col-lg-6 text-white showcase-img"
-                 style="background-image: url({% static 'img/bg-showcase-2.jpg' %});"></div>
-            <div class="col-lg-6 my-auto showcase-text">
-                <h2>Superfast delivery</h2>
-                <p class="lead mb-0">If you're feeling lazy to dine out, order food to your doorstep. Pay with
-                    Cash-on-Delivery or Debit/Credit cards.</p>
-            </div>
-        </div>
-        <div class="row no-gutters">
-            <div class="col-lg-6 order-lg-2 text-white showcase-img"
-                 style="background-image: url({% static 'img/bg-showcase-3.jpg' %});"></div>
-            <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                <h2>Ride or partner with us</h2>
-                <p class="lead mb-0">Earn by signing up as a staff and become a part of our delivery team, or if you've
-                    your own establishment, partner with us.</p>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<!-- Testimonials -->
-<section class="testimonials text-center bg-light">
+    <!-- Testimonials -->
+    <section class="testimonials text-center bg-light">
+        <div class="container">
+            <h2 class="mb-5">What people are saying...</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <h5>Margaret E.</h5>
+                        <p class="font-weight-light mb-0">"This is fantastic!"</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <h5>Fred S.</h5>
+                        <p class="font-weight-light mb-0">"Had a wonderful customer experience!"</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <h5>Sarah W.</h5>
+                        <p class="font-weight-light mb-0">"This definitely has increased by business value!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="call-to-action-no-bg text-white text-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="h1 logo-xl">Zoup! Delivery</h1>
+                    <h2 class="mt-4 mb-4 text-dark">Sign up as a part of our delivery team.</h2>
+                </div>
+                <div class="col-md-8 col-xl-5 mx-auto">
+                    <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'staff-sign-up' %}">Sign up
+                        as
+                        Staff!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="call-to-action text-white text-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h2 class="mb-4 shadowed">Partner with us to make the most out of your business.</h2>
+                </div>
+                <div class="col-md-8 col-xl-5 mx-auto">
+                    <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'partner-with-zoup' %}">Partner
+                        Up!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% else %}
     <div class="container">
-        <h2 class="mb-5">What people are saying...</h2>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-                    <h5>Margaret E.</h5>
-                    <p class="font-weight-light mb-0">"This is fantastic!"</p>
+        <h1 class="h1 mt-5"><span class="font-weight-bold">Search results</span> for keyword <span
+                class="text-muted">{{ q }}</span></h1>
+        <hr>
+        <h1 class="h1 mt-4">Restaurants</h1>
+        <p class="text-info">You can only order from the restaurants in your location.</p>
+        <hr>
+        {% if not restaurants %}
+            <p>No restaurants found.</p>
+        {% else %}
+            {% for restaurant in restaurants %}
+                <div class="card mb-5">
+                    <h5 class="card-header font-weight-bold">{{ restaurant.name }}</h5>
+                    <div class="card-body">
+                        {% if restaurant.is_serving %}
+                            <h5 class="card-title text-dark">This place is currently serving</h5>
+                        {% else %}
+                            <h5 class="card-title text-muted">This place is not serving currently</h5>
+                        {% endif %}
+                        <p class="card-title"><i class="icon-location-pin m-auto text-primary"></i>
+                            &nbsp;{{ restaurant.location.capitalize }}</p>
+                        {% if restaurant.support_delivery %}
+                            <p class="card-text text-success"><i class="icon-check m-auto text-primary"></i> &nbsp;
+                                Supports
+                                Delivery</p>
+                        {% else %}
+                            <p class="card-text text-danger"><i class="icon-close m-auto text-primary"></i> &nbsp; Does
+                                Not
+                                Support Delivery</p>
+                        {% endif %}
+                        <p class="card-title"><i class="icon-cup m-auto text-primary"></i>
+                            &nbsp;{{ restaurant.cuisine }} Cuisine</p>
+                        <a href="{% url 'restaurant-menu' restaurant_slug=restaurant.slug %}"
+                           class="btn btn-primary mt-2">View
+                            Menu</a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-                    <h5>Fred S.</h5>
-                    <p class="font-weight-light mb-0">"Had a wonderful customer experience!"</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-                    <h5>Sarah W.</h5>
-                    <p class="font-weight-light mb-0">"This definitely has increased by business value!"</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+            {% endfor %}
+        {% endif %}
+        <h1 class="h1 mt-lg-5">Events</h1>
+        <hr>
+        {% if not events %}
+            <p>No events found.</p>
+        {% else %}
+            {% for event in events %}
+                <div class="card mb-5">
+                    <h5 class="card-header font-weight-bold">{{ event.name }}</h5>
+                    <div class="card-body">
+                        <p class="card-title text-muted">{{ event.description }}</p>
+                        <p class="card-title"><i
+                                class="icon-location-pin m-auto text-primary"></i>&nbsp;{{ event.venue }}</p>
+                        <p class="card-text text-info"><i class="icon-calendar m-auto"></i>&nbsp;{{ event.from_date }} -
+                            {{ event.to_date }}</p>
+                        <p class="card-title"></p>
 
-<!-- Call to Action -->
-<section class="call-to-action-no-bg text-white text-center">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-9 mx-auto">
-                <h1 class="h1 logo-xl">Zoup! Delivery</h1>
-                <h2 class="mt-4 mb-4 text-dark">Sign up as a part of our delivery team.</h2>
-            </div>
-            <div class="col-md-8 col-xl-5 mx-auto">
-                <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'staff-sign-up' %}">Sign up as
-                    Staff!</a>
-            </div>
-        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <h1 class="h1 mt-lg-5">Food</h1>
+        <hr>
+        {% if not food %}
+            <p>No items found.</p>
+        {% else %}
+            {% for item in food %}
+                <div class="card mb-5">
+                    <h5 class="card-header font-weight-bold">{{ item.name }}</h5>
+                    <div class="card-body">
+                        <p class="card-title text-muted">{{ item.description }}</p>
+                        <p class="card-title"><i class="icon-location-pin m-auto text-primary"></i>&nbsp;Available
+                            at
+                            <a href="{% url 'restaurant-menu' restaurant_slug=item.menu.restaurant.slug %}">{{ item.menu.restaurant }}</a>
+                        </p>
+                        {% if item.menu.restaurant.is_serving %}
+                            <p class="card-text text-info"><i class="icon-check m-auto"></i>&nbsp;Restaurant is
+                                currently serving</p>
+                        {% else %}
+                            <p class="card-text text-danger"><i class="icon-close m-auto"></i>&nbsp;Restaurant is not
+                                serving currently</p>
+                        {% endif %}
+                        <p class="card-title font-weight-bold">Price &#8377; {{ item.price }} per item</p>
+                        <p class="card-text">{{ item.type }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-</section>
-
-<!-- Call to Action -->
-<section class="call-to-action text-white text-center">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-9 mx-auto">
-                <h2 class="mb-4 shadowed">Partner with us to make the most out of your business.</h2>
-            </div>
-            <div class="col-md-8 col-xl-5 mx-auto">
-                <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'partner-with-zoup' %}">Partner
-                    Up!</a>
-            </div>
-        </div>
-    </div>
-</section>
+{% endif %}
 
 <!-- Footer -->
 <footer class="footer bg-light">

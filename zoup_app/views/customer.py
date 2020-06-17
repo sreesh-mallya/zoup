@@ -1,17 +1,36 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
 from zoup_app.models import Restaurant, Item
-from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem
+from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event
 
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def index(request):
+    if 'q' in request.GET:
+        q = request.GET['q'].strip()
+        if not q:
+            pass
+        else:
+            if request.user.is_authenticated:
+                food = Item.objects.filter(menu__restaurant__is_approved=True,
+                                           menu__restaurant__location=request.user.location,
+                                           name__icontains=q)
+                restaurants = Restaurant.objects.filter(Q(name__icontains=q) & Q(location=request.user.location))
+                food = Item.objects.get(id=1)
+            else:
+                food = Item.objects.filter(menu__restaurant__is_approved=True,
+                                           name__icontains=q)
+                restaurants = Restaurant.objects.filter(name__icontains=q)
+            events = Event.objects.filter(name__icontains=q)
+
+            return render(request, 'index.html', {'restaurants': restaurants, 'events': events, 'food': food, 'q': q})
     return render(request, 'index.html')
 
 
@@ -144,15 +163,29 @@ def change_password(request):
     return render(request, 'change-password.html', {'form': form})
 
 
+@user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def restaurant_list(request):
+    q = None
+    if 'q' in request.GET:
+        q = request.GET['q'].strip()
+        print(q)
     if request.user.is_authenticated:
-        restaurants = Restaurant.objects.filter(is_approved=True, location=request.user.location)
+        if q is not None:
+            restaurants = Restaurant.objects.filter(
+                Q(name__icontains=q) & Q(location=request.user.location) & Q(is_approved=True))
+            print(restaurants)
+        else:
+            restaurants = Restaurant.objects.filter(is_approved=True, location=request.user.location)
     else:
-        restaurants = Restaurant.objects.filter(is_approved=True)
+        if q is not None:
+            restaurants = Restaurant.objects.filter(Q(name__icontains=q) & Q(is_approved=True))
+        else:
+            restaurants = Restaurant.objects.filter(is_approved=True)
 
-    return render(request, 'restaurant-list.html', {'restaurants': restaurants})
+    return render(request, 'restaurant-list.html', {'restaurants': restaurants, 'q': q})
 
 
+@user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def restaurant_menu(request, restaurant_slug):
     if request.method == 'POST' and request.user.is_authenticated and \
             request.user.account_type == ACCOUNT_TYPES['CUSTOMER']:
@@ -269,3 +302,15 @@ def view_cart(request):
 def view_orders(request):
     orders = Order.objects.filter(customer=request.user)
     return render(request, 'customer-orders.html', {'orders': orders})
+
+
+def event_list(request):
+    q = None
+    if 'q' in request.GET:
+        q = request.GET['q'].strip()
+    if q is not None:
+        events = Event.objects.filter(name__icontains=q)
+    else:
+        events = Event.objects.all()
+
+    return render(request, 'event-list.html', {'events': events, 'q': q})

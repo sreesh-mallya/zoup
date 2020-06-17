@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 
 def slugify_fields(instance, attr1, attr2):
     klass = instance.__class__
-    slug = temp = slugify(getattr(instance, attr1) + getattr(instance, attr2))
+    slug = temp = slugify(getattr(instance, attr1) + '-' + getattr(instance, attr2))
     for x in itertools.count(1):
         if not klass.objects.filter(slug=slug).exists():
             break

@@ -6,6 +6,7 @@ urlpatterns = [
     path('', customer.index, name='home'),
     path('partner-with-zoup', vendor.partner_with_zoup, name='partner-with-zoup'),
     path('restaurants', customer.restaurant_list, name='restaurant-list'),
+    path('events', customer.event_list, name='event-list'),
     path('restaurants/<str:restaurant_slug>', customer.restaurant_menu, name='restaurant-menu'),
     path('accounts/customer/sign-up', customer.customer_signup, name='customer-sign-up'),
     path('accounts/staff/sign-up', staff.staff_signup, name='staff-sign-up'),
@@ -32,6 +33,8 @@ urlpatterns = [
 
     # Administration URLs
     path('administration/dashboard/customers', admin.customer_administration, name='admin-customers'),
+    path('administration/dashboard/events', admin.view_events, name='admin-events'),
+    path('administration/dashboard/events/create', admin.create_event, name='admin-create-event'),
     path('administration/dashboard/restaurants', admin.restaurant_administration, name='admin-restaurants'),
     path('administration/dashboard/staff', admin.staff_administration, name='admin-staff'),
     path('administration/dashboard/requests', admin.requests_administration, name='admin-requests'),

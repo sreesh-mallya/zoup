@@ -21,7 +21,7 @@ class Restaurant(models.Model):
     support_delivery = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{}, {}'.format(self.name, self.location)
+        return '{}, {}'.format(self.name, self.location.capitalize())
 
 
 class Owner(models.Model):
@@ -56,12 +56,10 @@ class Item(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=100, blank=False)
-    slug = models.SlugField(blank=True)
-    banner = models.URLField(blank=True, null=True)
-    venue = models.CharField(blank=True, max_length=100, null=True)
+    venue = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default=None, null=True)
     description = models.CharField(max_length=1000, blank=False)
-    from_date = models.DateTimeField(blank=True)
-    to_date = models.DateTimeField(blank=True)
+    from_date = models.DateField(blank=True)
+    to_date = models.DateField(blank=True)
     created_on = models.DateField(auto_now_add=True)
 
     def __str__(self):

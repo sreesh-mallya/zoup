@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from zoup_app.models import Restaurant
-from zoup_app.models.vendor import Owner, Item
+from zoup_app.models.vendor import Owner, Item, Event
 from zoup_app.utils import slugify_fields, slugify_field
 
 
@@ -57,3 +57,45 @@ class ItemForm(ModelForm):
             item.save()
 
         return item
+
+
+class EventForm(ModelForm):
+    name = forms.CharField(label='', widget=forms.TextInput(
+        attrs={
+            'autofocus': 'true',
+            'class': 'form-control',
+            'placeholder': 'Event Name'
+        }
+    ), required=True)
+
+    venue = forms.ModelChoiceField(Restaurant.objects.all(), widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Event Name'
+        }
+    ), required=True)
+
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Event Name'
+        }
+    ), required=True)
+
+    from_date = forms.DateField(widget=forms.SelectDateWidget(
+        empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        attrs={
+            'class': 'form-control'
+        }
+    ), required=True)
+
+    to_date = forms.DateField(widget=forms.SelectDateWidget(
+        empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        attrs={
+            'class': 'form-control'
+        }
+    ), required=True)
+
+    class Meta:
+        model = Event
+        exclude = ('created_on',)

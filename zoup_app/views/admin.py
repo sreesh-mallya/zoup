@@ -6,9 +6,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES
-from zoup_app.forms.vendor import ItemForm
+from zoup_app.forms.vendor import ItemForm, EventForm
 from zoup_app.models import User, Restaurant
-from zoup_app.models.vendor import Owner, Menu
+from zoup_app.models.vendor import Owner, Menu, Event
 from zoup_app.utils import string_generator
 
 
@@ -96,6 +96,9 @@ def review_restaurant(request, restaurant_id):
             restaurant = Restaurant.objects.get(id=restaurant_id)
             restaurant.is_approved = True
 
+            menu = Menu(restaurant=restaurant)
+            menu.save()
+
             owner = restaurant.owner
 
             # Generate username and password from custom string generator utility function
@@ -175,3 +178,25 @@ def view_restaurant_items(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
     items = restaurant.menu.item_set.all()
     return render(request, 'administration/restaurant-view-items.html', {'items': items, 'restaurant': restaurant})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 1)
+def view_events(request):
+    events = Event.objects.all()
+    return render(request, 'administration/admin-events.html', {'events': events})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 1)
+def create_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin-events')
+        else:
+            return render(request, 'administration/create-event.html', {'form': form})
+    else:
+        form = EventForm()
+        return render(request, 'administration/create-event.html', {'form': form})

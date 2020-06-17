@@ -1,0 +1,20 @@
+{% extends "administration/admin-base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="h2 mt-4">Create Event</h2>
+        <hr>
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" action="{% url 'admin-create-event' %}" class="pt-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mb-5">Create Event</button>
+        </form>
+    </div>
+{% endblock %}

@@ -82,11 +82,9 @@
                                        name="item-quantity">
                             </div>
                             {% if restaurant.is_serving and restaurant.support_delivery %}
-                                {% ifequal restaurant.location user.location %}
                                     <div class="col-lg-3 text-right">
                                         <p class="text-muted">Sign in to add to cart</p>
                                     </div>
-                                {% endifequal %}
                             {% else %}
                                 <div class="col-lg-3 text-right">
                                     {% if not restaurant.is_serving %}
