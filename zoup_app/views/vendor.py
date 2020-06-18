@@ -60,7 +60,7 @@ def pending_orders(request):
 def order_history(request):
     restaurant = request.user.restaurant
     orders = Order.objects.filter(
-        Q(status='delivered') | Q(status='picked-up') | Q(status='delivered') & Q(restaurant=restaurant))
+        (Q(status='delivered') | Q(status='picked-up')) & Q(restaurant=restaurant))
     return render(request, 'partner/order-history.html', {'orders': orders})
 
 
