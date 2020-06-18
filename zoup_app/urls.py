@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/customer/sign-up', customer.customer_signup, name='customer-sign-up'),
     path('accounts/staff/sign-up', staff.staff_signup, name='staff-sign-up'),
     path('cart', customer.view_cart, name='view-cart'),
+    path('review-order', customer.review_order, name='review-order'),
     path('orders', customer.view_orders, name='view-orders'),
 
     # Common account related URLs

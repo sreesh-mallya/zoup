@@ -1,0 +1,70 @@
+{% extends "partner/partner-base.html" %}
+
+{% block content %}
+    {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h4 class="h4">Order Details</h4>
+    <hr>
+    <ul>
+        <li>Order ID: {{ order.id }}</li>
+        <li>Customer Username: {{ order.customer.username }}</li>
+        <li>Customer Name: {{ order.customer.name }}</li>
+        <li>Order Created On: {{ order.created_on }}</li>
+        <li>Order Item Count: {{ order.item_count }}</li>
+        <li>Order Total: &#8377; {{ order.total }}</li>
+        {% if order.delivered_on %}
+            <li>Delivered On: {{ order.delivered_on }}</li>
+        {% else %}
+            <li>Delivered On: Not yet delivered</li>
+        {% endif %}
+        <li>Order Status: {{ order.status.capitalize }}</li>
+    </ul>
+
+    <h4 class="h4 mt-5">Order Items</h4>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>&#8377; {{ item.item.price }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if order.status == 'pending' or order.status == 'accepted' and order.status == 'preparing' %}
+        <div class="mt-4">
+            <h3 class="h3">Update Order Status</h3>
+            <form class="mt-4" method="post" action="{% url 'partner-order-details' order_id=order.id %}">
+                {% csrf_token %}
+                <select name="order-status" class="form-control form-control-sm" required
+                        id="id_order-status">
+                    <option value="" selected>---------</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="prepared">Prepared</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary btn-sm mt-4">Update Status</button>
+            </form>
+        </div>
+    {% endif %}
+
+{% endblock %}

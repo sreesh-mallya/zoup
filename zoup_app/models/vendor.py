@@ -1,6 +1,7 @@
 from django.db import models
 
-from zoup_app.constants import LOCATIONS, CUISINES, ITEM_TYPES, ORDER_STATUS_CHOICES
+from zoup_app.constants import LOCATIONS, CUISINES, ITEM_TYPES, ORDER_STATUS_CHOICES, PAYMENT_TYPE_CHOICES, \
+    PAYMENT_STATUS_CHOICES, ITEM_CATEGORY
 from zoup_app.models import User
 
 
@@ -49,6 +50,7 @@ class Item(models.Model):
     description = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=50, choices=ITEM_TYPES)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True)
+    category = models.CharField(choices=ITEM_CATEGORY, max_length=50)
 
     def __str__(self):
         return self.name
@@ -88,9 +90,20 @@ class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.SET(None), null=True)
     delivered_on = models.DateTimeField(null=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, default='pending', max_length=20)
+    payment_type = models.CharField(choices=PAYMENT_TYPE_CHOICES, default='cash-on-delivery', max_length=50,
+                                    blank=False)
+    payment_status = models.CharField(choices=PAYMENT_STATUS_CHOICES, default='pending', max_length=20, blank=False)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.restaurant.name, self.customer.username, self.total)
+
+
+class Pickup(models.Model):
+    staff = models.OneToOneField(User, on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.staff.name, self.order.id, self.order.restaurant.name)
 
 
 class CartItem(models.Model):

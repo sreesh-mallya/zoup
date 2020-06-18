@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
-from zoup_app.constants import ACCOUNT_TYPES
+from zoup_app.constants import ACCOUNT_TYPES, PAYMENT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
 from zoup_app.models import Restaurant, Item
 from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event
@@ -254,37 +254,8 @@ def view_cart(request):
             cart.cartitem_set.all().delete()
             cart.save()
             messages.success(request, 'Cart cleared.')
-
-        # Place order based on user's cart
-        elif 'place-order' in request.POST:
-            cart = request.user.cart
-
-            # Place order
-            order = Order(customer=request.user, item_count=cart.item_count, total=cart.total,
-                          restaurant=cart.restaurant)
-
-            print(order)
-            order.save()
-
-            items = cart.cartitem_set.all()
-
-            # Assign cart items to order items
-            for i, cart_item in enumerate(items):
-                order_item = OrderItem(item=cart_item.item, order=order, quantity=cart_item.quantity)
-                order_item.save()
-
-            # Clear current user's cart
-            cart = request.user.cart
-            cart.restaurant = None
-            cart.total = 0
-            cart.item_count = 0
-            cart.cartitem_set.all().delete()
-            cart.save()
-
-            messages.success(request, 'Order has been placed.')
         else:
             messages.error("Oops! Something's wrong. Try again!")
-        return redirect('view-cart')
     else:
         try:
             cart = request.user.cart
@@ -295,6 +266,54 @@ def view_cart(request):
         items = cart.cartitem_set.all()
 
         return render(request, 'cart.html', {'items': items, 'restaurant': cart.restaurant})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == ACCOUNT_TYPES['CUSTOMER'])
+def review_order(request):
+    if request.method == 'POST':
+        payment_type = None
+        if 'payment-type' in request.POST and request.POST['payment-type'] in PAYMENT_TYPES:
+            payment_type = request.POST['payment-type']
+        else:
+            messages.error(request, 'Please select a payment type.')
+
+        cart = request.user.cart
+
+        # Place order
+        order = Order(customer=request.user, item_count=cart.item_count, total=cart.total,
+                      restaurant=cart.restaurant, payment_type=payment_type)
+
+        print(order)
+        order.save()
+
+        items = cart.cartitem_set.all()
+
+        # Assign cart items to order items
+        for i, cart_item in enumerate(items):
+            order_item = OrderItem(item=cart_item.item, order=order, quantity=cart_item.quantity)
+            order_item.save()
+
+        # Clear current user's cart
+        cart = request.user.cart
+        cart.restaurant = None
+        cart.total = 0
+        cart.item_count = 0
+        cart.cartitem_set.all().delete()
+        cart.save()
+
+        messages.success(request, 'Order has been placed.')
+
+    else:
+        try:
+            cart = request.user.cart
+        except Cart.DoesNotExist:
+            cart = Cart(user=request.user)
+            cart.save()
+
+        items = cart.cartitem_set.all()
+
+        return render(request, 'review-order.html', {'items': items, 'restaurant': cart.restaurant})
 
 
 @login_required(login_url='/accounts/sign-in')

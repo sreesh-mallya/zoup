@@ -33,7 +33,6 @@
             </div>
         {% endif %}
 
-
         {% for item in items %}
             <div class="card mb-2">
                 <div class="card-body">
@@ -55,8 +54,8 @@
             <form action="{% url 'view-cart' %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-outline-secondary btn-lg m-2" name="clear-cart" value="">Clear Cart</button>
+                <button class="btn btn-primary btn-lg m-2" name="place-order" value="">Place Order</button>
             </form>
-            <a class="btn btn-primary btn-lg m-2" role="button" href="{% url 'review-order' %}">Review Order</a>
         </div>
     {% else %}
         <h1 class="h1 mt-5 font-weight-bold" style="padding-top: 120px;">No items in cart.</h1>

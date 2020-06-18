@@ -47,3 +47,20 @@ ORDER_STATUS_CHOICES = (
 )
 
 ORDER_STATUS = ['placed', 'accepted', 'preparing', 'prepared', 'picked-up', 'delivered', 'cancelled']
+
+PAYMENT_TYPE_CHOICES = (
+    ('cash-on-delivery', 'Cash-on-Delivery'),
+    ('card', 'Debit/Credit Card')
+)
+
+PAYMENT_TYPES = ['cash-on-delivery', 'card']
+
+PAYMENT_STATUS_CHOICES = (
+    ('paid', 'Paid'),
+    ('pending', 'Pending')
+)
+
+ITEM_CATEGORY = (
+    ('vegetarian', 'Vegetarian'),
+    ('non-vegetarian', 'Non-Vegetarian')
+)
