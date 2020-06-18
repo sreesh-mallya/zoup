@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
@@ -47,6 +46,11 @@ def staff_signup(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 3)
 def all_pickups(request):
+    """
+    View all pickups in that staff's location.
+    :param request:
+    :return:
+    """
     orders = Order.objects.filter(customer__location=request.user.location)
     return render(request, 'staff/all-pickups.html', {'orders': orders})
 
@@ -66,12 +70,20 @@ def pickup_history(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 3)
 def pickup_details(request, order_id):
+    """
+    View to handle updating order status from staff module.
+    :param request:
+    :param order_id:
+    :return:
+    """
     if request.method == 'POST':
         if 'order-status' in request.POST:
             order_status = request.POST['order-status'].lower()
             if order_status in ORDER_STATUS:
                 order = Order.objects.get(id=order_id)
                 order.status = order_status
+
+                # If delivering order, set delivery time and CoD payment status to paid
                 if order_status == 'delivered':
                     order.delivered_on = timezone.now()
                     order.payment_status = 'paid'

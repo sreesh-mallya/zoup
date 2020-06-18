@@ -55,7 +55,7 @@
             <form action="{% url 'review-order' %}" method="post" class="mt-4">
                 {% csrf_token %}
                 <label for="paymentType">Payment Type:</label>
-                <select name="payment-type" id="paymentType" class="form-control">
+                <select name="payment-type" id="paymentType" class="form-control" required>
                     <option value="cash-on-delivery" selected>Cash-On-Delivery</option>
                     <option value="card">Credit/Debit Card</option>
                 </select>

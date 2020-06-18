@@ -13,6 +13,11 @@ from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event, Rese
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def index(request):
+    """
+    View to render home page, handle search, and create reservations.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         if 'reservation' in request.POST:
             restaurant_id = request.POST['reservation']
@@ -174,6 +179,13 @@ def change_password(request):
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def restaurant_list(request):
+    """
+    View list of restaurants based on if the user is signed in or not. If signed in, only retrieve restaurants at his
+    location that are approved. Else retrieve all approved restaurants. Also filter out restaurants by name if there is
+    a search query param.
+    :param request:
+    :return:
+    """
     q = None
     if 'q' in request.GET:
         q = request.GET['q'].strip()
@@ -196,6 +208,12 @@ def restaurant_list(request):
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def restaurant_menu(request, restaurant_slug):
+    """
+    View items in a restaurant, with an add to cart if there is a POST request with quantity, restaurant and item ID.
+    :param request:
+    :param restaurant_slug:
+    :return:
+    """
     if request.method == 'POST' and request.user.is_authenticated and \
             request.user.account_type == ACCOUNT_TYPES['CUSTOMER']:
 
@@ -253,6 +271,11 @@ def restaurant_menu(request, restaurant_slug):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.is_authenticated and u.account_type == ACCOUNT_TYPES['CUSTOMER'])
 def view_cart(request):
+    """
+    View cart, and clear cart on a POST request.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         # POST request for clearing cart: reset cart attribute values
         if 'clear-cart' in request.POST:
@@ -281,6 +304,12 @@ def view_cart(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == ACCOUNT_TYPES['CUSTOMER'])
 def review_order(request):
+    """
+    View to handle order review, and set payment status based on payment type selected by user. Clear cart after
+    placing an order.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         payment_type = None
         if 'payment-type' in request.POST and request.POST['payment-type'] in PAYMENT_TYPES:
@@ -331,11 +360,22 @@ def review_order(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.is_authenticated and u.account_type == ACCOUNT_TYPES['CUSTOMER'])
 def view_orders(request):
+    """
+    View all orders belonging to that customer
+    :param request:
+    :return:
+    """
     orders = Order.objects.filter(customer=request.user)
     return render(request, 'customer-orders.html', {'orders': orders})
 
 
+@user_passes_test(lambda u: not u.is_authenticated or u.account_type == ACCOUNT_TYPES['CUSTOMER'])
 def event_list(request):
+    """
+    View events, based on search query if exists
+    :param request:
+    :return:
+    """
     q = None
     if 'q' in request.GET:
         q = request.GET['q'].strip()

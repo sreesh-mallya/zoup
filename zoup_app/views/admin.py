@@ -176,6 +176,12 @@ def add_item_to_menu(request, restaurant_id):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def view_restaurant_items(request, restaurant_id):
+    """
+    Retrieve restaurant items.
+    :param request:
+    :param restaurant_id:
+    :return:
+    """
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
     items = restaurant.menu.item_set.all()
     return render(request, 'administration/restaurant-view-items.html', {'items': items, 'restaurant': restaurant})
@@ -184,6 +190,11 @@ def view_restaurant_items(request, restaurant_id):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def view_events(request):
+    """
+    View all events
+    :param request:
+    :return:
+    """
     events = Event.objects.all()
     return render(request, 'administration/admin-events.html', {'events': events})
 
@@ -191,6 +202,11 @@ def view_events(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 1)
 def create_event(request):
+    """
+    Create event view from model form.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
