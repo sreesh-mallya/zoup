@@ -7,32 +7,39 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES, PAYMENT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
-from zoup_app.forms.vendor import ItemForm
 from zoup_app.models import Restaurant, Item
-from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event
+from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event, Reservation
 
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def index(request):
-    print(ItemForm())
-    if 'q' in request.GET:
-        q = request.GET['q'].strip()
-        if not q:
-            pass
-        else:
-            if request.user.is_authenticated:
-                food = Item.objects.filter(menu__restaurant__is_approved=True,
-                                           menu__restaurant__location=request.user.location,
-                                           name__icontains=q)
-                restaurants = Restaurant.objects.filter(Q(name__icontains=q) & Q(location=request.user.location))
-                food = Item.objects.get(id=1)
+    if request.method == 'POST':
+        if 'reservation' in request.POST:
+            restaurant_id = request.POST['reservation']
+            restaurant = Restaurant.objects.get(id=restaurant_id)
+            reservation = Reservation(user=request.user, restaurant=restaurant)
+            reservation.save()
+            return render(request, 'index.html', {'reserved': True})
+    else:
+        if 'q' in request.GET:
+            q = request.GET['q'].strip()
+            if not q:
+                pass
             else:
-                food = Item.objects.filter(menu__restaurant__is_approved=True,
-                                           name__icontains=q)
-                restaurants = Restaurant.objects.filter(name__icontains=q)
-            events = Event.objects.filter(name__icontains=q)
+                if request.user.is_authenticated:
+                    food = Item.objects.filter(menu__restaurant__is_approved=True,
+                                               menu__restaurant__location=request.user.location,
+                                               name__icontains=q)
+                    restaurants = Restaurant.objects.filter(Q(name__icontains=q) & Q(location=request.user.location))
+                    food = Item.objects.get(id=1)
+                else:
+                    food = Item.objects.filter(menu__restaurant__is_approved=True,
+                                               name__icontains=q)
+                    restaurants = Restaurant.objects.filter(name__icontains=q)
+                events = Event.objects.filter(name__icontains=q)
 
-            return render(request, 'index.html', {'restaurants': restaurants, 'events': events, 'food': food, 'q': q})
+                return render(request, 'index.html',
+                              {'restaurants': restaurants, 'events': events, 'food': food, 'q': q})
     return render(request, 'index.html')
 
 

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ORDER_STATUS
 from zoup_app.forms.vendor import OwnerForm, RestaurantForm
-from zoup_app.models.vendor import Order
+from zoup_app.models.vendor import Order, Reservation
 
 
 def partner_with_zoup(request):
@@ -42,6 +42,11 @@ def partner_with_zoup(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def all_orders(request):
+    """
+    View all orders for the restaurant
+    :param request:
+    :return:
+    """
     restaurant = request.user.restaurant
     orders = Order.objects.filter(restaurant=restaurant)
     return render(request, 'partner/all-orders.html', {'orders': orders})
@@ -50,6 +55,11 @@ def all_orders(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def pending_orders(request):
+    """
+    View only pending orders
+    :param request:
+    :return:
+    """
     restaurant = request.user.restaurant
     orders = Order.objects.filter(restaurant=restaurant, status='pending')
     return render(request, 'partner/pending-orders.html', {'orders': orders})
@@ -58,6 +68,11 @@ def pending_orders(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def order_history(request):
+    """
+    View past orders
+    :param request:
+    :return:
+    """
     restaurant = request.user.restaurant
     orders = Order.objects.filter(
         (Q(status='delivered') | Q(status='picked-up')) & Q(restaurant=restaurant))
@@ -67,6 +82,12 @@ def order_history(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def order_details(request, order_id):
+    """
+    View order details
+    :param request:
+    :param order_id:
+    :return:
+    """
     if request.method == 'POST':
         if 'order-status' in request.POST:
             order_status = request.POST['order-status'].lower()
@@ -87,6 +108,11 @@ def order_details(request, order_id):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 2)
 def toggle_serving(request):
+    """
+    Change restaurant serving status
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         if 'toggle-is-serving' in request.POST:
             value = request.POST['toggle-is-serving'].upper()
@@ -106,3 +132,16 @@ def toggle_serving(request):
         restaurant = request.user.restaurant
         print(restaurant.is_serving)
         return render(request, 'partner/partner-settings.html', {'restaurant': restaurant})
+
+
+@login_required(login_url='/accounts/sign-in')
+@user_passes_test(lambda u: u.account_type == 2)
+def view_reservations(request):
+    """
+    View restaurant reservations
+    :param request:
+    :return:
+    """
+    restaurant = request.user.restaurant
+    reservations = Reservation.objects.filter(restaurant=restaurant)
+    return render(request, 'partner/reservations.html', {'reservations': reservations})

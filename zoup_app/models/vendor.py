@@ -114,3 +114,11 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.item, self.quantity)
+
+
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.user.name, self.restaurant.name)

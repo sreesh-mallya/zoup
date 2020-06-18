@@ -88,6 +88,16 @@
                         &nbsp;{{ restaurant.cuisine }} Cuisine</p>
                     <a href="{% url 'restaurant-menu' restaurant_slug=restaurant.slug %}" class="btn btn-primary mt-2">View
                         Menu</a>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'home' %}" class="mt-3">
+                            {% csrf_token %}
+                            <button class="btn btn-info" type="submit" value="{{ restaurant.id }}" name="reservation">
+                                Ask for a reservation
+                            </button>
+                        </form>
+                    {% else %}
+                        <p class="mt-3">Sign in to request a reservation</p>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

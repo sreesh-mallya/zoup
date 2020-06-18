@@ -26,6 +26,7 @@ urlpatterns = [
     path('partner/orders/history', vendor.order_history, name='partner-order-history'),
     path('partner/orders/<int:order_id>', vendor.order_details, name='partner-order-details'),
     path('settings', vendor.toggle_serving, name='partner-settings'),
+    path('partner/reservations', vendor.view_reservations, name='partner-reservations'),
 
     # Staff URLs
     path('staff/pickups/all', staff.all_pickups, name='staff-all-pickups'),
