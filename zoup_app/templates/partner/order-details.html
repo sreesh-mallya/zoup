@@ -48,7 +48,7 @@
         </table>
     </div>
 
-    {% if order.status == 'pending' or order.status == 'accepted' and order.status == 'preparing' %}
+    {% if order.status == 'pending' or order.status == 'accepted' or order.status == 'preparing' %}
         <div class="mt-4">
             <h3 class="h3">Update Order Status</h3>
             <form class="mt-4" method="post" action="{% url 'partner-order-details' order_id=order.id %}">
