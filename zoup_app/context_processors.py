@@ -13,3 +13,4 @@ def cart_item_count_processor(request):
             cart_item_count = cart.item_count
 
     return {'cart_item_count': cart_item_count}
+

@@ -28,10 +28,10 @@
                         <td>{{ restaurant.owner.contact }}</td>
                         <td>{{ restaurant.location.capitalize }}</td>
                         <td>{{ restaurant.cuisine }}</td>
-                        {% if restaurant.serving_now %}
+                        {% if restaurant.is_serving %}
                             <td><span class="icon-like m-auto text-dark"></span></td>
                         {% else %}
-                            <td><span class="icon-like m-auto text-dark"></span></td>
+                            <td><span class="icon-dislike m-auto text-dark"></span></td>
                         {% endif %}
                         <td><a href="{% url 'admin-review-restaurant' restaurant_id=restaurant.id %}">View All
                             Details</a></td>

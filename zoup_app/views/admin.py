@@ -96,6 +96,7 @@ def review_restaurant(request, restaurant_id):
             restaurant = Restaurant.objects.get(id=restaurant_id)
             restaurant.is_approved = True
 
+            # Create a menu for the restaurant
             menu = Menu(restaurant=restaurant)
             menu.save()
 

@@ -24,6 +24,8 @@
                     <th>Total</th>
                     <th>Delivered On</th>
                     <th>Status</th>
+                    <th>Payment Method</th>
+                    <th>Payment Status</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -42,6 +44,8 @@
                             <td>Not yet delivered</td>
                         {% endif %}
                         <td>{{ order.status.capitalize }}</td>
+                        <td>{{ order.payment_type.capitalize }}</td>
+                        <td>{{ order.payment_status.capitalize }}</td>
                         {% if order.delivered_on or order.status == 'prepared' or order.status == 'picked-up'%}
                             <td>No actions</td>
                         {% else %}

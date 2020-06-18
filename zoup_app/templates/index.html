@@ -157,40 +157,42 @@
             </div>
         </div>
     </section>
-
-    <!-- Call to Action -->
-    <section class="call-to-action-no-bg text-white text-center">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-9 mx-auto">
-                    <h1 class="h1 logo-xl">Zoup! Delivery</h1>
-                    <h2 class="mt-4 mb-4 text-dark">Sign up as a part of our delivery team.</h2>
-                </div>
-                <div class="col-md-8 col-xl-5 mx-auto">
-                    <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'staff-sign-up' %}">Sign up
-                        as
-                        Staff!</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Call to Action -->
-    <section class="call-to-action text-white text-center">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-9 mx-auto">
-                    <h2 class="mb-4 shadowed">Partner with us to make the most out of your business.</h2>
-                </div>
-                <div class="col-md-8 col-xl-5 mx-auto">
-                    <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'partner-with-zoup' %}">Partner
-                        Up!</a>
+    {% if not request.user.is_authenticated %}
+        <!-- Call to Action -->
+        <section class="call-to-action-no-bg text-white text-center">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 mx-auto">
+                        <h1 class="h1 logo-xl">Zoup! Delivery</h1>
+                        <h2 class="mt-4 mb-4 text-dark">Sign up as a part of our delivery team.</h2>
+                    </div>
+                    <div class="col-md-8 col-xl-5 mx-auto">
+                        <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'staff-sign-up' %}">Sign
+                            up
+                            as
+                            Staff!</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="call-to-action text-white text-center">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 mx-auto">
+                        <h2 class="mb-4 shadowed">Partner with us to make the most out of your business.</h2>
+                    </div>
+                    <div class="col-md-8 col-xl-5 mx-auto">
+                        <a role="button" class="btn btn-block btn-lg btn-primary" href="{% url 'partner-with-zoup' %}">Partner
+                            Up!</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
 {% else %}
     <div class="container">
         <h1 class="h1 mt-5"><span class="font-weight-bold">Search results</span> for keyword <span

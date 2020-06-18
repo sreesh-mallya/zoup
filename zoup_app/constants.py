@@ -46,7 +46,7 @@ ORDER_STATUS_CHOICES = (
     ('cancelled', 'Cancelled'),
 )
 
-ORDER_STATUS = ['placed', 'accepted', 'preparing', 'prepared', 'picked-up', 'delivered', 'cancelled']
+ORDER_STATUS = ['pending', 'accepted', 'preparing', 'prepared', 'picked-up', 'delivered', 'cancelled']
 
 PAYMENT_TYPE_CHOICES = (
     ('cash-on-delivery', 'Cash-on-Delivery'),

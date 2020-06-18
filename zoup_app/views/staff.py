@@ -11,7 +11,8 @@ from zoup_app.models.vendor import Order
 
 def staff_signup(request):
     """
-    View to handle customer creation via a form. Creates a staff user and sets the corresponding account_type value.
+    View to handle customer creation via a form. Creates a staff user and sets the corresponding account_type value,
+    and creates a pickup object for that staff user.
     :param request:
     :return:
     """
@@ -26,9 +27,16 @@ def staff_signup(request):
             user.account_type = ACCOUNT_TYPES['STAFF']
             user.is_approved = False
             user.save()
+
+            # Create a pickup for the staff user pointing to no order
+            pickup = Pickup(staff=user, order=None)
+            pickup.save()
+
             messages.success(request,
                              'Your account has been created. You\'ll be notified when we approve your account.')
+
             return redirect('sign-in')
+
         else:
             return render(request, 'staff-signup.html', {'form': staff_form})
     else:
@@ -46,7 +54,12 @@ def all_pickups(request):
 @login_required(login_url='/accounts/sign-in')
 @user_passes_test(lambda u: u.account_type == 3)
 def pickup_history(request):
-    orders = Order.objects.filter(Q(customer__location=request.user.location) & Q(status='delivered'))
+    """
+    Retrieve all orders that were delivered by the staff user.
+    :param request:
+    :return:
+    """
+    orders = Order.objects.filter(customer__location=request.user.location, status='delivered', staff=request.user)
     return render(request, 'staff/past-pickups.html', {'orders': orders})
 
 
@@ -61,6 +74,7 @@ def pickup_details(request, order_id):
                 order.status = order_status
                 if order_status == 'delivered':
                     order.delivered_on = timezone.now()
+                    order.payment_status = 'paid'
                 order.save()
                 messages.success(request, 'Updated status of order with ID {}.'.format(order_id))
         else:

@@ -25,6 +25,8 @@
             <li>Delivered On: Not yet delivered</li>
         {% endif %}
         <li>Order Status: {{ order.status.capitalize }}</li>
+        <li>Payment Method: {{ order.payment_type.capitalize }}</li>
+        <li>Payment Status: {{ order.payment_status.capitalize }}</li>
     </ul>
 
     <h4 class="h4 mt-5">Order Items</h4>
@@ -53,21 +55,26 @@
         delivered, the status cannot be changed again.
     </div>
 
-    {% if order.status == 'picked-up' or order.status == 'prepared' %}
-        <div class="mt-4">
-            <h3 class="h3">Update Order Status</h3>
-            <form class="mt-4" method="post" action="{% url 'staff-pickup-details' order_id=order.id %}">
-                {% csrf_token %}
-                <select name="order-status" class="form-control form-control-sm" required
-                        id="id_order-status">
-                    <option value="" selected>---------</option>
-                    <option value="picked-up">Picked Up</option>
-                    <option value="delivered">Delivered</option>
-                </select>
-
-                <button type="submit" class="btn btn-primary btn-sm mt-4">Update Status</button>
-            </form>
-        </div>
+    {% if order.status == 'prepared' or order.status == 'picked-up' %}
+        <h3 class="h3">Update Order Status</h3>
+        <form class="mt-4" method="post" action="{% url 'staff-pickup-details' order_id=order.id %}">
+        {% csrf_token %}
+        {% if order.status == 'prepared' %}
+            <p>Pick this order up!</p>
+            <button type="submit" class="btn btn-primary mt-4" name="order-status" value="picked-up">
+                Pick Up
+            </button>
+        {% elif order.status == 'picked-up' %}
+            {% if order.payment_type == 'cash-on-delivery' %}
+                <button type="submit" class="btn btn-primary mt-4" name="order-status" value="delivered">
+                    Received Cash and Delivered
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-primary mt-4" name="order-status" value="delivered">
+                    Delivered
+                </button>
+            {% endif %}
+        {% endif %}
     {% endif %}
 
 {% endblock %}

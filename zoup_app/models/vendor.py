@@ -50,7 +50,7 @@ class Item(models.Model):
     description = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=50, choices=ITEM_TYPES)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True)
-    category = models.CharField(choices=ITEM_CATEGORY, max_length=50)
+    category = models.CharField(choices=ITEM_CATEGORY, max_length=50, default='vegetarian')
 
     def __str__(self):
         return self.name
@@ -96,14 +96,6 @@ class Order(models.Model):
 
     def __str__(self):
         return '{} - {} - {}'.format(self.restaurant.name, self.customer.username, self.total)
-
-
-class Pickup(models.Model):
-    staff = models.OneToOneField(User, on_delete=models.CASCADE)
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return '{} - {} - {}'.format(self.staff.name, self.order.id, self.order.restaurant.name)
 
 
 class CartItem(models.Model):

@@ -39,6 +39,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <p class="h4 card-title text-center font-weight-bold">{{ item.item.name }}</p>
+                            <small>{{ item.category.capitalize }}</small>
                         </div>
                         <div class="col-lg-4 text-center text-info h5 font-weight-bold">
                             Price per item: &#8377; {{ item.item.price }}
@@ -51,10 +52,15 @@
             </div>
         {% endfor %}
         <div class="text-right">
-            <form action="{% url 'view-cart' %}" method="post">
+            <form action="{% url 'review-order' %}" method="post" class="mt-4">
                 {% csrf_token %}
-                <button class="btn btn-outline-secondary btn-lg m-2" name="clear-cart" value="">Clear Cart</button>
-                <button class="btn btn-primary btn-lg m-2" name="place-order" value="">Place Order</button>
+                <label for="paymentType">Payment Type:</label>
+                <select name="payment-type" id="paymentType" class="form-control">
+                    <option value="cash-on-delivery" selected>Cash-On-Delivery</option>
+                    <option value="card">Credit/Debit Card</option>
+                </select>
+                <a class="btn btn-outline-secondary btn-lg mt-5" role="button" href="{% url 'view-cart' %}">Back to Cart</a><br>
+                <button class="btn btn-primary btn-lg mt-3" name="place-order">Place Order</button>
             </form>
         </div>
     {% else %}

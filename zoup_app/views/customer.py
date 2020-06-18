@@ -7,12 +7,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from zoup_app.constants import ACCOUNT_TYPES, PAYMENT_TYPES
 from zoup_app.forms.user import UserCreationForm, UserChangeForm, UserPasswordChangeForm
+from zoup_app.forms.vendor import ItemForm
 from zoup_app.models import Restaurant, Item
 from zoup_app.models.vendor import Cart, CartItem, Order, OrderItem, Event
 
 
 @user_passes_test(lambda u: not u.is_authenticated or (u.account_type == ACCOUNT_TYPES['CUSTOMER']))
 def index(request):
+    print(ItemForm())
     if 'q' in request.GET:
         q = request.GET['q'].strip()
         if not q:
@@ -256,6 +258,7 @@ def view_cart(request):
             messages.success(request, 'Cart cleared.')
         else:
             messages.error("Oops! Something's wrong. Try again!")
+        return redirect('view-cart')
     else:
         try:
             cart = request.user.cart
@@ -284,7 +287,9 @@ def review_order(request):
         order = Order(customer=request.user, item_count=cart.item_count, total=cart.total,
                       restaurant=cart.restaurant, payment_type=payment_type)
 
-        print(order)
+        if payment_type == 'card':
+            order.payment_status = 'paid'
+
         order.save()
 
         items = cart.cartitem_set.all()
@@ -303,7 +308,7 @@ def review_order(request):
         cart.save()
 
         messages.success(request, 'Order has been placed.')
-
+        return redirect('view-orders')
     else:
         try:
             cart = request.user.cart

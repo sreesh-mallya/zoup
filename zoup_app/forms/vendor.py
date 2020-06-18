@@ -9,7 +9,7 @@ from zoup_app.utils import slugify_fields, slugify_field
 class RestaurantForm(ModelForm):
     class Meta:
         model = Restaurant
-        exclude = ('is_approved', 'is_active', 'is_serving', 'banner', 'user')
+        exclude = ('is_approved', 'is_active', 'is_serving', 'banner', 'user', 'slug')
 
     def save(self, commit=True):
         restaurant = super().save(commit=False)

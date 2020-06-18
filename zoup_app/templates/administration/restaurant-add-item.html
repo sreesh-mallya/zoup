@@ -72,7 +72,20 @@
                     {% endif %}
                 </div>
             </div>
-
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="id_category">Category:</label></th>
+                    <select name="category" id="id_category" class="form-control">
+                        <option value="vegetarian" selected>Vegetarian</option>
+                        <option value="non-vegetarian">Non-Vegetarian</option>
+                    </select>
+                    {% if form.category.errors %}
+                        {% for error in form.category.errors %}
+                            <small class="text-danger">{{ error|escape }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary mb-5">Add Item</button>
         </form>
     </div>

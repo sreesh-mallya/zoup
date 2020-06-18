@@ -51,6 +51,7 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                     <p class="h4 card-title font-weight-bold">{{ item.name }}</p>
+                                    <small>{{ item.category.capitalize }}</small>
                                     <input type="hidden" name="item-id" value="{{ item.id }}">
                                 </div>
                                 <div class="col-lg-3 text-center text-info h5 font-weight-bold">
@@ -74,6 +75,7 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <p class="h4 card-title font-weight-bold">{{ item.name }}</p>
+                                <small>{{ item.category }}</small>
                             </div>
                             <div class="col-lg-3 text-center text-info h5 font-weight-bold">
                                 &#8377; {{ item.price }}</div>
