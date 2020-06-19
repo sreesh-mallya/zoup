@@ -27,10 +27,6 @@ def staff_signup(request):
             user.is_approved = False
             user.save()
 
-            # Create a pickup for the staff user pointing to no order
-            pickup = Pickup(staff=user, order=None)
-            pickup.save()
-
             messages.success(request,
                              'Your account has been created. You\'ll be notified when we approve your account.')
 
@@ -63,7 +59,7 @@ def pickup_history(request):
     :param request:
     :return:
     """
-    orders = Order.objects.filter(customer__location=request.user.location, status='delivered', staff=request.user)
+    orders = Order.objects.filter(status='delivered', staff=request.user)
     return render(request, 'staff/past-pickups.html', {'orders': orders})
 
 
@@ -82,11 +78,13 @@ def pickup_details(request, order_id):
             if order_status in ORDER_STATUS:
                 order = Order.objects.get(id=order_id)
                 order.status = order_status
+                order.staff = request.user
 
                 # If delivering order, set delivery time and CoD payment status to paid
                 if order_status == 'delivered':
                     order.delivered_on = timezone.now()
                     order.payment_status = 'paid'
+
                 order.save()
                 messages.success(request, 'Updated status of order with ID {}.'.format(order_id))
         else:
